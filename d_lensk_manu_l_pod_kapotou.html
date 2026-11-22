@@ -1,0 +1,3471 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DÍLENSKÝ MANUÁL: POD KAPOTOU – Interaktivní technický průvodce</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Oswald', 'sans-serif'],
+            sans: ['IBM Plex Sans', 'sans-serif'],
+            mono: ['IBM Plex Mono', 'monospace'],
+          },
+          colors: {
+            steel: {
+              950: '#111315',
+              900: '#1A1C1E',
+              850: '#222528',
+              800: '#2A2E33',
+              700: '#3B4047',
+              600: '#525862',
+            },
+            paper: {
+              50: '#FAF8F3',
+              100: '#F3F0E8',
+              200: '#E7E2D5',
+              300: '#D6CFC0',
+              border: '#C6BFB0',
+            },
+            ink: {
+              900: '#1C1B18',
+              700: '#3B3831',
+              500: '#645F54',
+            },
+            rust: '#9A3412',
+            blueprint: '#1E3A5F',
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #141618;
+      color: #E5E7EB;
+      font-family: 'IBM Plex Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Subtle workshop manual paper grain for right technical sheet */
+    .manual-paper {
+      background-color: #F3F0E8;
+      background-image:
+        radial-gradient(rgba(28, 27, 24, 0.035) 1px, transparent 0),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.35), rgba(214, 207, 192, 0.25));
+      background-size: 16px 16px, 100% 100%;
+      color: #1C1B18;
+    }
+
+    /* Technical hatching stripe used in workshop manual headers */
+    .tech-hatch {
+      background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(28, 27, 24, 0.08),
+        rgba(28, 27, 24, 0.08) 4px,
+        transparent 4px,
+        transparent 8px
+      );
+    }
+
+    .steel-hatch {
+      background-image: repeating-linear-gradient(
+        -45deg,
+        rgba(255, 255, 255, 0.04),
+        rgba(255, 255, 255, 0.04) 4px,
+        transparent 4px,
+        transparent 8px
+      );
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #1A1C1E;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #3B4047;
+      border-radius: 2px;
+    }
+    .manual-paper ::-webkit-scrollbar-track {
+      background: #E7E2D5;
+    }
+    .manual-paper ::-webkit-scrollbar-thumb {
+      background: #B5AD9C;
+    }
+
+    /* Mechanical Throttle Slider */
+    input[type="range"].throttle-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      cursor: pointer;
+    }
+    input[type="range"].throttle-slider::-webkit-slider-runnable-track {
+      height: 6px;
+      border-radius: 1px;
+      background: #111315;
+      border: 1px solid #4B515A;
+    }
+    input[type="range"].throttle-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      margin-top: -7px;
+      height: 18px;
+      width: 12px;
+      border-radius: 2px;
+      background: #D97706;
+      border: 1px solid #FDE68A;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    }
+    input[type="range"].throttle-slider:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-amber-700/30 selection:text-amber-100">
+
+  <!-- ========================================================================
+       ANODIZED STEEL TOP WORKSHOP CONSOLE BAR
+       ======================================================================== -->
+  <header class="sticky top-0 z-30 bg-steel-900 border-b border-steel-700 shadow-md">
+    <div class="max-w-[1640px] mx-auto px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between gap-3">
+
+      <!-- Manual Title & Engine Plate -->
+      <div class="flex items-center gap-3">
+        <!-- Stamped metal serial plate -->
+        <div class="px-2.5 py-1.5 bg-steel-950 border border-steel-600 rounded-[2px] flex flex-col items-center justify-center leading-none">
+          <span class="font-mono text-[9px] tracking-widest text-stone-400 uppercase">VAG / 1.6 16V</span>
+          <span class="font-display text-sm font-bold tracking-wider text-amber-500 mt-0.5">KÓD: AZD</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2.5">
+            <h1 class="font-display text-lg sm:text-xl font-bold tracking-wide uppercase text-stone-100">
+              DÍLENSKÝ MANUÁL: <span class="text-amber-500">POD KAPOTOU</span>
+            </h1>
+            <span class="hidden md:inline-block font-mono text-[11px] px-2 py-0.5 bg-steel-850 border border-steel-700 text-stone-300 rounded-[2px]">
+              Řadový 4-válec DOHC • 1598 cm³ • 77 kW
+            </span>
+          </div>
+          <p class="text-[11px] text-stone-400">
+            Interaktivní rozkres motorového prostoru — kliknutím na díl zobrazíte technický list a mechanický řez
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Controls: Car Paint Color, Mode Switch, Hood Prop Latch -->
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+
+        <!-- Car Body Paint Swatch Selector -->
+        <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 bg-steel-950 border border-steel-700 rounded-[2px]" title="Barva laku karoserie">
+          <span class="font-mono text-[10px] uppercase tracking-wider text-stone-400 mr-1">Lak:</span>
+          <button data-paint="red" class="paint-swatch w-4 h-4 rounded-[2px] border-2 border-amber-400 bg-[#A8201A]" title="Tornádo červená"></button>
+          <button data-paint="blue" class="paint-swatch w-4 h-4 rounded-[2px] border border-steel-600 bg-[#1E436E]" title="Modrá metalíza"></button>
+          <button data-paint="silver" class="paint-swatch w-4 h-4 rounded-[2px] border border-steel-600 bg-[#8C959E]" title="Stříbrná reflex"></button>
+          <button data-paint="white" class="paint-swatch w-4 h-4 rounded-[2px] border border-steel-600 bg-[#D8D6CE]" title="Alpská bílá"></button>
+        </div>
+
+        <!-- Explore vs Diagnostic Test Switch -->
+        <div class="inline-flex bg-steel-950 border border-steel-700 rounded-[2px] p-0.5">
+          <button id="btnModeExplore" class="px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold bg-amber-600 text-steel-950 transition">
+            Technický průvodce
+          </button>
+          <button id="btnModeQuiz" class="px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold text-stone-300 hover:text-white transition flex items-center gap-1.5">
+            <span>Diagnostický test</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+          </button>
+        </div>
+
+        <!-- Hood Prop Rod / Close Hood Button -->
+        <button id="btnToggleHood" class="px-3 py-1.5 bg-steel-800 hover:bg-steel-700 border border-steel-600 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold text-stone-100 transition flex items-center gap-2">
+          <span id="hoodLatchIndicator" class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span id="hoodBtnText">Odjistit vzpěru a zavřít kapotu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       MAIN WORKSHOP WORKSPACE (LEFT: ENGINE BAY + BENCH CONTROLS | RIGHT: MANUAL SHEET)
+       ======================================================================== -->
+  <main class="flex-1 max-w-[1640px] w-full mx-auto px-3 sm:px-5 py-3.5 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+
+    <!-- LEFT COLUMN: ENGINE BAY DRAWING & MECHANICAL BENCH CONTROLS (7 or 8 cols) -->
+    <section class="lg:col-span-7 xl:col-span-8 flex flex-col gap-3">
+
+      <!-- DIAGNOSTIC TEST BANNER (Hidden in Explore mode) -->
+      <div id="quizBanner" class="hidden bg-steel-900 border-l-4 border-amber-500 border-y border-r border-steel-700 rounded-[2px] p-3">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-start sm:items-center gap-3">
+            <div class="px-2.5 py-1.5 bg-steel-950 border border-steel-700 rounded-[2px] font-mono text-xs font-bold text-amber-500" id="quizProgressBadge">
+              ÚKOL 01/10
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-[10px] uppercase tracking-wider text-stone-400" id="quizTypeLabel">IDENTIFIKACE DÍLU DLE ZÁVADY</span>
+              </div>
+              <div class="text-xs sm:text-sm font-semibold text-stone-100 mt-0.5" id="quizPromptText">
+                Načítání diagnostického úkolu...
+              </div>
+              <p id="quizFeedbackText" class="font-mono text-[11px] text-stone-400 mt-0.5">
+                Klepněte na odpovídající součástku v motorovém prostoru.
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="px-2.5 py-1 bg-steel-950 border border-steel-700 rounded-[2px] font-mono text-xs text-stone-300">
+              Úspěšnost: <span id="quizScoreText" class="text-amber-400 font-bold">0/10</span>
+            </div>
+            <button id="btnQuizHint" class="px-2.5 py-1 bg-steel-800 hover:bg-steel-700 border border-steel-600 rounded-[2px] font-mono text-[11px] text-stone-200 transition">
+              Nápověda
+            </button>
+            <button id="btnQuizRestart" class="hidden px-2.5 py-1 bg-amber-600 hover:bg-amber-500 rounded-[2px] font-display text-xs uppercase tracking-wider font-bold text-steel-950 transition">
+              Nový test
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- OPERATING CIRCUITS BAR (PROVOZNÍ OKRUHY) -->
+      <div class="bg-steel-900 border border-steel-700 rounded-[2px] px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5 overflow-x-auto">
+          <span class="font-mono text-[10px] uppercase tracking-wider text-stone-400 mr-1 whitespace-nowrap">Provozní okruhy:</span>
+          <button data-system="all" class="filter-pill active px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold bg-amber-600 text-steel-950 transition whitespace-nowrap">
+            Všechny celky (14)
+          </button>
+          <button data-system="cooling" class="filter-pill px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold bg-steel-950 text-stone-300 hover:text-white border border-steel-700 transition whitespace-nowrap flex items-center gap-1.5">
+            <span class="w-2 h-2 bg-[#2B7A9E]"></span>Chlazení
+          </button>
+          <button data-system="intake" class="filter-pill px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold bg-steel-950 text-stone-300 hover:text-white border border-steel-700 transition whitespace-nowrap flex items-center gap-1.5">
+            <span class="w-2 h-2 bg-[#3E7B56]"></span>Sání a výfuk
+          </button>
+          <button data-system="electric" class="filter-pill px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold bg-steel-950 text-stone-300 hover:text-white border border-steel-700 transition whitespace-nowrap flex items-center gap-1.5">
+            <span class="w-2 h-2 bg-[#C87D20]"></span>Elektrika
+          </button>
+          <button data-system="lubrication" class="filter-pill px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold bg-steel-950 text-stone-300 hover:text-white border border-steel-700 transition whitespace-nowrap flex items-center gap-1.5">
+            <span class="w-2 h-2 bg-[#B24A2B]"></span>Mazání a brzdy
+          </button>
+        </div>
+
+        <label class="inline-flex items-center gap-1.5 font-mono text-[11px] text-stone-300 cursor-pointer select-none">
+          <input type="checkbox" id="chkShowPins" checked class="accent-amber-600 rounded-[2px]" />
+          <span>Pozice dílů (01–14)</span>
+        </label>
+      </div>
+
+      <!-- MAIN ENGINE BAY CANVAS VIEWPORT WITH TECHNICAL RULER FRAME -->
+      <div class="relative bg-[#111315] border border-steel-700 rounded-[2px] shadow-xl overflow-hidden select-none">
+        <!-- Top technical drawing ruler header -->
+        <div class="bg-steel-950 border-b border-steel-800 px-3 py-1 flex items-center justify-between text-[10px] font-mono text-stone-400">
+          <div class="flex items-center gap-3">
+            <span>VÝKRES Č. M-16-01</span>
+            <span class="hidden sm:inline text-stone-500">|</span>
+            <span class="hidden sm:inline" id="circuitDiagramHint">SCHÉMA: CELKOVÝ POHLED DO MOTOROVÉHO PROSTORU</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span id="thermostatBadge" class="text-stone-300">TERMOSTAT: <strong id="thermostatStateText" class="text-amber-500">ZAVŘENÝ (MALÝ OKRUH)</strong></span>
+          </div>
+        </div>
+
+        <!-- Responsive Engine Bay Canvas Container -->
+        <div id="engineCanvasWrapper" class="w-full relative aspect-[16/10] min-h-[320px] sm:min-h-[440px] max-h-[630px]">
+          <canvas id="engineBayCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+        </div>
+
+        <!-- Bottom technical legend strip -->
+        <div class="bg-steel-950 border-t border-steel-800 px-3 py-1.5 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] text-stone-400">
+          <span>OVLÁDÁNÍ: KLIK NA DÍL = TECHNICKÝ LIST • KLIK NA VZPĚRU / KAPOTU = ZAVŘÍT KAPOTU</span>
+          <span>POŘADÍ ZAPALOVÁNÍ: 1 – 3 – 4 – 2</span>
+        </div>
+      </div>
+
+      <!-- MECHANICAL WORKBENCH IGNITION & THROTTLE CONSOLE -->
+      <div class="bg-steel-900 border border-steel-700 rounded-[2px] p-3 steel-hatch">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-center">
+
+          <!-- Mechanical 3-Position Ignition Key Switch (0 / I / START) + Audio -->
+          <div class="md:col-span-5 flex items-center gap-2.5 bg-steel-950 border border-steel-700 rounded-[2px] p-2">
+            <div class="flex flex-col">
+              <span class="font-mono text-[9px] uppercase tracking-wider text-stone-400">Spínací skříňka</span>
+              <div class="flex items-center gap-1 mt-1">
+                <button id="ignPos0" class="ign-btn px-2.5 py-1.5 rounded-[2px] font-mono text-xs font-bold border transition bg-amber-600 text-steel-950 border-amber-400">
+                  0
+                </button>
+                <button id="ignPos1" class="ign-btn px-2.5 py-1.5 rounded-[2px] font-mono text-xs font-bold border transition bg-steel-900 text-stone-300 border-steel-700 hover:border-stone-500">
+                  I
+                </button>
+                <button id="ignPosStart" class="ign-btn px-3 py-1.5 rounded-[2px] font-display text-xs uppercase tracking-wider font-bold border transition bg-steel-900 text-emerald-400 border-emerald-800/80 hover:bg-emerald-950">
+                  START
+                </button>
+              </div>
+            </div>
+
+            <!-- Warning Cluster LEDs (Oil, Battery, Check Engine) -->
+            <div class="flex-1 flex items-center justify-around border-l border-steel-800 pl-2">
+              <div class="flex flex-col items-center" title="Kontrolka dobíjení (alternátor)">
+                <span id="ledBattery" class="w-2.5 h-2.5 rounded-full bg-stone-700 border border-stone-600"></span>
+                <span class="font-mono text-[8px] text-stone-400 mt-1">DOBÍJ.</span>
+              </div>
+              <div class="flex flex-col items-center" title="Kontrolka tlaku oleje">
+                <span id="ledOil" class="w-2.5 h-2.5 rounded-full bg-stone-700 border border-stone-600"></span>
+                <span class="font-mono text-[8px] text-stone-400 mt-1">OLEJ</span>
+              </div>
+              <div class="flex flex-col items-center" title="Elektronika motoru (EPC)">
+                <span id="ledEpc" class="w-2.5 h-2.5 rounded-full bg-stone-700 border border-stone-600"></span>
+                <span class="font-mono text-[8px] text-stone-400 mt-1">EPC</span>
+              </div>
+            </div>
+
+            <!-- Sound Synth Button -->
+            <button id="btnToggleSound" title="Zvuk motoru (Web Audio syntéza)" class="p-2 bg-steel-900 hover:bg-steel-800 border border-steel-700 rounded-[2px] text-stone-400 hover:text-amber-400 transition">
+              <svg id="soundOffIcon" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5zM23 9l-6 6M17 9l6 6" />
+              </svg>
+              <svg id="soundOnIcon" class="w-4 h-4 hidden text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Mechanical Throttle Linkage Control -->
+          <div class="md:col-span-4 bg-steel-950 border border-steel-700 rounded-[2px] p-2 flex flex-col justify-between">
+            <div class="flex items-center justify-between text-[11px]">
+              <span class="font-mono uppercase text-stone-400">Ovládání škrticí klapky</span>
+              <button id="btnBlipThrottle" class="px-1.5 py-0.5 bg-steel-800 hover:bg-steel-700 border border-steel-600 rounded-[2px] font-mono text-[10px] text-amber-400 transition">
+                Přidat plyn
+              </button>
+            </div>
+            <input id="rpmSlider" type="range" min="850" max="6000" step="50" value="850" disabled class="throttle-slider w-full my-1.5" />
+            <div class="flex justify-between font-mono text-[9px] text-stone-500">
+              <span>850 VOLNOBĚH</span>
+              <span>3000</span>
+              <span class="text-red-400">6000 MAX</span>
+            </div>
+          </div>
+
+          <!-- Digital Workshop Multimeter / Tachometer Readouts -->
+          <div class="md:col-span-3 grid grid-cols-3 gap-1.5">
+            <div class="bg-steel-950 border border-steel-700 rounded-[2px] p-1.5 flex flex-col justify-between">
+              <span class="font-mono text-[8px] uppercase text-stone-400">OTÁČKY</span>
+              <span id="rpmReadout" class="font-mono text-xs sm:text-sm font-bold text-amber-400 mt-0.5">0</span>
+              <span class="font-mono text-[8px] text-stone-500">ot./min</span>
+            </div>
+            <div class="bg-steel-950 border border-steel-700 rounded-[2px] p-1.5 flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-[8px] uppercase text-stone-400">TEPLOTA</span>
+                <button id="btnToggleWarmup" class="font-mono text-[8px] text-amber-500 hover:underline" title="Rychle zahřát / zchladit motor">92°</button>
+              </div>
+              <span id="tempReadout" class="font-mono text-xs sm:text-sm font-bold text-stone-200 mt-0.5">22 °C</span>
+              <span class="font-mono text-[8px] text-stone-500">G12 okruh</span>
+            </div>
+            <div class="bg-steel-950 border border-steel-700 rounded-[2px] p-1.5 flex flex-col justify-between">
+              <span class="font-mono text-[8px] uppercase text-stone-400">NAPĚTÍ</span>
+              <span id="voltReadout" class="font-mono text-xs sm:text-sm font-bold text-stone-200 mt-0.5">12.4 V</span>
+              <span class="font-mono text-[8px] text-stone-500">svorka 30</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         RIGHT COLUMN: AUTHENTIC WORKSHOP MANUAL SHEET (#F3F0E8 WARM PAPER)
+         ======================================================================== -->
+    <aside class="lg:col-span-5 xl:col-span-4">
+      <article class="manual-paper border border-paper-border rounded-[2px] shadow-2xl overflow-hidden flex flex-col">
+
+        <!-- Top Manual Header Bar with Technical Hatching -->
+        <div class="tech-hatch border-b border-paper-border px-3.5 py-2 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span id="manualPartCode" class="px-2 py-0.5 bg-ink-900 text-paper-50 font-mono text-xs font-bold rounded-[2px]">
+              POZICE 01
+            </span>
+            <span id="manualSystemTag" class="font-mono text-[11px] font-semibold uppercase tracking-wider text-rust">
+              MOTOR A MAZÁNÍ
+            </span>
+          </div>
+          <!-- Direct Part Selector Dropdown -->
+          <select id="partSelectDropdown" aria-label="Vybrat pozici dílu" class="bg-paper-50 border border-paper-border rounded-[2px] px-2 py-1 font-mono text-[11px] font-semibold text-ink-900 focus:outline-none focus:border-ink-900 max-w-[180px]">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+
+        <!-- Component Title & Subtitle -->
+        <div class="px-4 pt-3 pb-2.5 border-b border-paper-border bg-paper-50/60">
+          <h2 id="inspectorTitle" class="font-display text-xl sm:text-2xl font-bold uppercase tracking-tight text-ink-900 leading-tight">
+            Blok motoru a víko ventilů
+          </h2>
+          <p id="inspectorSubtitle" class="text-xs font-medium text-ink-700 mt-0.5">
+            Litý hliníkový blok válců, klikový mechanismus a rozvod DOHC 16V
+          </p>
+        </div>
+
+        <!-- ANIMATED TECHNICAL CUTAWAY DIAGRAM (Drafting Paper Canvas) -->
+        <div class="px-4 pt-3 pb-2 border-b border-paper-border">
+          <div class="border border-paper-border bg-[#ECE7DA] rounded-[2px] overflow-hidden">
+            <div class="bg-paper-200 border-b border-paper-border px-2.5 py-1 flex items-center justify-between font-mono text-[10px] text-ink-700">
+              <span id="cutawayCaption">OBR. 01 — KINEMATICKÝ ŘEZ ČTYŘDOBÉHO MOTORU</span>
+              <span class="text-blueprint font-semibold">ŽIVÝ ŘEZ</span>
+            </div>
+
+            <div class="w-full h-[215px] relative">
+              <canvas id="inspectorAnimCanvas" class="w-full h-full block"></canvas>
+            </div>
+
+            <!-- Interactive Workbench Test Strip (for parts with manual test) -->
+            <div id="miniActionBar" class="hidden border-t border-paper-border bg-paper-200 px-3 py-1.5 flex items-center justify-between gap-2">
+              <span id="miniActionHint" class="font-mono text-[11px] text-ink-700">Dílenský test:</span>
+              <button id="btnMiniAction" class="px-2.5 py-1 bg-ink-900 hover:bg-ink-700 text-paper-50 font-display text-xs uppercase tracking-wider font-semibold rounded-[2px] transition">
+                Provést test
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TECHNICAL SPECIFICATION TABLE (PROVOZNÍ HODNOTY) -->
+        <div class="px-4 py-2.5 border-b border-paper-border bg-paper-200/50">
+          <div class="font-display text-xs uppercase tracking-wider font-bold text-blueprint mb-1.5">
+            Provozní a kontrolní hodnoty
+          </div>
+          <div id="specsGrid" class="grid grid-cols-2 gap-x-3 gap-y-1 font-mono text-[11px]">
+            <!-- Populated dynamically per part -->
+          </div>
+        </div>
+
+        <!-- DETAILED WORKSHOP MANUAL TEXT SECTIONS -->
+        <div class="p-4 flex flex-col gap-3 text-xs sm:text-[13px] leading-relaxed">
+          <div>
+            <h3 class="font-display text-xs uppercase tracking-wider font-bold text-ink-900 border-b border-paper-border pb-0.5 mb-1">
+              1. Funkce součástky ve vozidle
+            </h3>
+            <p id="inspectorWhatItDoes" class="text-ink-900">
+              Popis funkce...
+            </p>
+          </div>
+
+          <div>
+            <h3 class="font-display text-xs uppercase tracking-wider font-bold text-ink-900 border-b border-paper-border pb-0.5 mb-1">
+              2. Konstrukce a princip činnosti
+            </h3>
+            <p id="inspectorHowItWorks" class="text-ink-700">
+              Princip činnosti...
+            </p>
+          </div>
+
+          <div class="bg-paper-200/80 border-l-2 border-rust px-3 py-2">
+            <h3 class="font-display text-xs uppercase tracking-wider font-bold text-rust mb-0.5">
+              3. Typické závady z dílenské praxe
+            </h3>
+            <p id="inspectorFaults" class="text-ink-900 text-xs">
+              Závady z praxe...
+            </p>
+          </div>
+
+          <!-- Previous / Next Manual Page Footer -->
+          <div class="flex items-center justify-between pt-1 border-t border-paper-border">
+            <button id="btnPrevPart" class="px-3 py-1.5 bg-paper-50 hover:bg-paper-200 border border-paper-border rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold text-ink-900 transition">
+              ← Předchozí pozice
+            </button>
+            <span id="manualPageCounter" class="font-mono text-[11px] text-ink-500">STR. 01 / 14</span>
+            <button id="btnNextPart" class="px-3 py-1.5 bg-paper-50 hover:bg-paper-200 border border-paper-border rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold text-ink-900 transition">
+              Další pozice →
+            </button>
+          </div>
+        </div>
+
+      </article>
+    </aside>
+  </main>
+
+  <script>
+    /**
+     * ============================================================================
+     * DÍLENSKÝ MANUÁL: POD KAPOTOU – KOMPLETNÍ TECHNICKÁ SIMULACE (1.6 16V AZD)
+     * ============================================================================
+     */
+
+    // ----------------------------------------------------------------------------
+    // 1. DATABÁZE VŠECH 14 DÍLŮ DLE DÍLENSKÉHO MANUÁLU (POZICE 01 – 14)
+    // ----------------------------------------------------------------------------
+    const ENGINE_PARTS = [
+      {
+        id: 'engine_block',
+        code: '01',
+        name: 'Blok motoru a víko ventilů',
+        shortName: 'Blok motoru',
+        system: 'lubrication',
+        systemLabel: 'Motor a mazání',
+        subtitle: 'Hliníkový blok válců se silentbloky, víko ventilů a nalévací hrdlo oleje',
+        cutawayTitle: 'OBR. 01 — KINEMATICKÝ ŘEZ VÁLCŮ (POŘADÍ 1–3–4–2)',
+        specs: [
+          { label: 'Kompresní tlak', value: '10,5 – 13,5 bar' },
+          { label: 'Pořadí zapalování', value: '1 – 3 – 4 – 2' },
+          { label: 'Náplň oleje', value: '3,5 l (5W-40)' },
+          { label: 'Volnoběžné otáčky', value: '820 – 880 ot./min' }
+        ],
+        whatItDoes:
+          'Blok motoru tvoří hlavní nosnou konstrukci pohonné jednotky uloženou v karoserii na pryžokovových silentblocích. Uvnitř čtyř litinových vložek válců se pohybují písty, které přes ojnice roztáčejí klikovou hřídel. Horní víko ventilů utěsňuje rozvodový mechanismus vačkových hřídelí.',
+        howItWorks:
+          'Pracovní cyklus probíhá ve čtyřech dobách (sání, komprese, expanze, výfuk) na dvě otáčky klikové hřídele. Kliková zalomení jsou přesazena o 180°, takže vždy dva písty stoupají a dva klesají, což vyvažuje setrvačné síly prvního řádu.',
+        faults:
+          'Průsak oleje kolem těsnění víka ventilů (stéká na výfukové svody a zapáchá), zanesené odvětrání klikové skříně (PCV) v zimě nebo utržený pravý hydrosilentblok způsobující klepání při rozjezdu.',
+        symptomQuestion: 'Z horní části motoru uniká olej kolem víka a při akceleraci celý agregát nadměrně vibruje na silentblocích.',
+        pin: { x: 0.48, y: 0.52 },
+        hitBox: { x: 0.37, y: 0.44, w: 0.22, h: 0.16 },
+        miniAction: null
+      },
+      {
+        id: 'radiator',
+        code: '02',
+        name: 'Chladič a sahara ventilátoru',
+        shortName: 'Chladič a sahara',
+        system: 'cooling',
+        systemLabel: 'Chladicí soustava',
+        subtitle: 'Hliníkový lamelový chladič s dvoustupňovým elektrickým ventilátorem',
+        cutawayTitle: 'OBR. 02 — PŘESTUP TEPLA V LAMELÁCH CHLADIČE',
+        specs: [
+          { label: 'Sepnutí 1. st. sahary', value: '92 – 95 °C' },
+          { label: 'Sepnutí 2. st. sahary', value: '99 – 102 °C' },
+          { label: 'Teplotní spád', value: 'cca 12 – 15 °C' },
+          { label: 'Provozní médium', value: 'G12+ / G13 (1:1)' }
+        ],
+        whatItDoes:
+          'Odvádí přebytečné spalovací teplo z chladicí kapaliny do okolního vzduchu. Při pomalé jízdě nebo stání v koloně zajišťuje nucený průtok vzduchu skrz žebrování elektrický ventilátor uložený v plastové stěně (sahaře).',
+        howItWorks:
+          'Horká kapalina vstupuje horním nátrubkem do soustavy plochých hliníkových trubiček osazených hustými vlnitými lamelami. Proudící vzduch odebírá teplo a ochlazená kapalina odtéká spodní hadicí zpět k vodnímu čerpadlu.',
+        faults:
+          'Oxidace a prosolení spodních lamel chladiče v zimním provozu, zanesení prostoru mezi chladičem motoru a kondenzátorem klimatizace nebo vadný předřadný odpor 1. rychlosti ventilátoru.',
+        symptomQuestion: 'Vozidlo drží teplotu při jízdě mimo město, ale v koloně teplota stoupá nad 100 °C, protože se nerozběhne ventilátor.',
+        pin: { x: 0.50, y: 0.71 },
+        hitBox: { x: 0.34, y: 0.67, w: 0.32, h: 0.08 },
+        miniAction: null
+      },
+      {
+        id: 'expansion_tank',
+        code: '03',
+        name: 'Expanzní nádobka chladicí kapaliny',
+        shortName: 'Expanzní nádobka',
+        system: 'cooling',
+        systemLabel: 'Chladicí soustava',
+        subtitle: 'Průhledná vyrovnávací nádobka s přetlakovým víčkem a ryskami MIN / MAX',
+        cutawayTitle: 'OBR. 03 — TEPELNÁ ROZTAŽNOST A PŘETLAKOVÝ VENTIL',
+        specs: [
+          { label: 'Otevírací přetlak víčka', value: '1,4 – 1,6 bar' },
+          { label: 'Podtlakový ventil', value: '0,05 – 0,1 bar' },
+          { label: 'Bod varu při 1,4 bar', value: 'cca 122 °C' },
+          { label: 'Kontrola hladiny', value: 'Pouze za studena' }
+        ],
+        whatItDoes:
+          'Pojímá zvětšený objem chladicí kapaliny při jejím ohřátí z 20 °C na 95 °C a udržuje v soustavě předepsaný přetlak, který zabraňuje vzniku parních bublin v hlavě válců.',
+        howItWorks:
+          'Ve šroubovacím víčku jsou dva pružinové ventily. Přetlakový ventil odpustí páru při překročení 1,5 bar; podtlakový ventil po vychladnutí motoru přisaje vzduch, aby nedošlo ke zborcení gumových hadic.',
+        faults:
+          'Netěsné O-kroužky v modrém víčku (kapalina vře už při 100 °C a vytéká přepadem), praskliny plastu ve středovém svaru nádobky nebo zašpinění vnitřních stěn olejem při proraženém chladiči oleje.',
+        symptomQuestion: 'Po zahřátí motoru syčí pára zpod modrého víčka vyrovnávací nádržky a kapalina vytéká přepadem i při běžné teplotě 90 °C.',
+        pin: { x: 0.24, y: 0.43 },
+        hitBox: { x: 0.19, y: 0.38, w: 0.10, h: 0.10 },
+        miniAction: null
+      },
+      {
+        id: 'thermostat',
+        code: '04',
+        name: 'Termostatická komora a čidlo teploty',
+        shortName: 'Termostat a čidlo',
+        system: 'cooling',
+        systemLabel: 'Chladicí soustava',
+        subtitle: 'Rozdělovací komora s voskovým termostatem a 2-pinovým zeleným čidlem G62',
+        cutawayTitle: 'OBR. 04 — VOSKOVÝ TERMOSTAT A OKRUHY CHLAZENÍ',
+        specs: [
+          { label: 'Začátek otevírání', value: '87 – 88 °C' },
+          { label: 'Plný zdvih (7 mm)', value: '102 °C' },
+          { label: 'Odpor čidla (20 °C)', value: '2 200 – 2 800 Ω' },
+          { label: 'Odpor čidla (90 °C)', value: '210 – 280 Ω' }
+        ],
+        whatItDoes:
+          'Termostat uzavírá průtok do chladiče u studeného motoru, aby se rychle dosáhlo provozní teploty. Zelené NTC čidlo teploty posílá přesný údaj o teplotě kapaliny řídicí jednotce motoru pro dávkování paliva.',
+        howItWorks:
+          'Kovová patrona termostatu obsahuje speciální vosk, který při 88 °C roztaje, zvětší svůj objem a vytlačí pístek proti vratné pružině, čímž otevře velký okruh přes chladič.',
+        faults:
+          'Termostat zaseknutý v otevřené poloze (motor se při jízdě z kopce podchlazuje na 65 °C a má vyšší spotřebu) nebo vadné zelené čidlo teploty způsobující špatné teplé starty.',
+        symptomQuestion: 'Ručička teploměru při jízdě mimo obec klesá k 60 °C, auto slabě topí a horní hadice ke chladiči je vlažná už 2 minuty po studeném startu.',
+        pin: { x: 0.35, y: 0.60 },
+        hitBox: { x: 0.31, y: 0.56, w: 0.08, h: 0.08 },
+        miniAction: null
+      },
+      {
+        id: 'airbox',
+        code: '05',
+        name: 'Vzduchový filtr (Airbox)',
+        shortName: 'Vzduchový filtr',
+        system: 'intake',
+        systemLabel: 'Sání a výfuk',
+        subtitle: 'Těleso čističe vzduchu se sponami a přívodem studeného vzduchu od masky',
+        cutawayTitle: 'OBR. 05 — FILTRACE NASÁVANÉHO VZDUCHU',
+        specs: [
+          { label: 'Interval výměny', value: '30 000 km / 2 roky' },
+          { label: 'Účinnost filtrace', value: '99,5 % (částice > 5 µm)' },
+          { label: 'Tlaková ztráta (nový)', value: '< 1,5 kPa' },
+          { label: 'Spotřeba vzduchu', value: 'cca 14,7 kg / 1 kg paliva' }
+        ],
+        whatItDoes:
+          'Zachytává silniční prach, písek a hmyz ze vzduchu nasávaného přední maskou, aby nedošlo k abrazivnímu vydření stěn válců, pístních kroužků a sedel ventilů.',
+        howItWorks:
+          'Vzduch vstupuje do spodní komory airboxu, kde se odstředivě oddělí hrubé nečistoty, a následně prochází zespodu nahoru skládanou papírovou vložkou do čisté části sání.',
+        faults:
+          'Silně zanesená vložka zvyšuje podtlak v sání a snižuje výkon ve vysokých otáčkách; uvolněné ocelové spony víka nebo prasklá vlnovcová hadice umožňují přisávání nefiltrovaného vzduchu.',
+        symptomQuestion: 'Motor ve vysokých otáčkách ztrácí tah a při demontáži víka sání je papírová vložka zcela černá a ucpaná prachem a listím.',
+        pin: { x: 0.72, y: 0.58 },
+        hitBox: { x: 0.64, y: 0.51, w: 0.15, h: 0.14 },
+        miniAction: {
+          label: 'Vyměnit vložku filtru',
+          hint: 'Porovnání tlakové ztráty:'
+        }
+      },
+      {
+        id: 'throttle_body',
+        code: '06',
+        name: 'Škrticí klapka a sací potrubí',
+        shortName: 'Škrticí klapka',
+        system: 'intake',
+        systemLabel: 'Sání a výfuk',
+        subtitle: 'Hliníkové hrdlo s natáčecí klapkou, táhlem plynu a rezonančním sáním',
+        cutawayTitle: 'OBR. 06 — REGULACE PRŮTOKU VZDUCHU KLAPKOU',
+        specs: [
+          { label: 'Průměr hrdla', value: '54 mm' },
+          { label: 'Úhel na volnoběh', value: '2,5 – 4,5°' },
+          { label: 'Úhel plný plyn', value: '84 – 88°' },
+          { label: 'Snímač tlaku MAP', value: '32 – 38 kPa (volnoběh)' }
+        ],
+        whatItDoes:
+          'Škrticí klapka dávkuje množství vzduchu vstupujícího do motoru podle požadavku řidiče. Sací potrubí (parohy) pak rozvádí vzduch rovnoměrně ke sacím ventilům všech čtyř válců.',
+        howItWorks:
+          'Natočením kruhové mosazné klapky se mění průřez hrdla. Snímač tlaku a teploty v sání (MAP) měří podtlak za klapkou, podle kterého řídicí jednotka vypočítá přesnou dávku vstřikovaného paliva.',
+        faults:
+          'Úsady olejového karbonu po obvodu klapky omezují štěrbinu pro volnoběh, což způsobuje houpaní otáček nebo zhasínání motoru po vyřazení rychlosti (vyžaduje vyčištění a základní nastavení).',
+        symptomQuestion: 'Po vyřazení na neutrál otáčky motoru kolísají mezi 500 a 1100 ot./min a motor občas zhasne kvůli karbonovým úsadám kolem klapky.',
+        pin: { x: 0.53, y: 0.42 },
+        hitBox: { x: 0.43, y: 0.36, w: 0.18, h: 0.09 },
+        miniAction: null
+      },
+      {
+        id: 'battery',
+        code: '07',
+        name: 'Autobaterie 12 V',
+        shortName: 'Autobaterie 12 V',
+        system: 'electric',
+        systemLabel: 'Elektrická soustava',
+        subtitle: 'Olověný startovací akumulátor 12 V / 60 Ah s krytkou pólu + a ukostřením',
+        cutawayTitle: 'OBR. 07 — ELEKTROCHEMICKÝ ČLÁNEK A STARTÉROVÝ ODBĚR',
+        specs: [
+          { label: 'Kapacita / proud', value: '60 Ah / 540 A (EN)' },
+          { label: 'Klidové napětí (100%)', value: '12,6 – 12,7 V' },
+          { label: 'Min. napětí při startu', value: '> 9,6 V' },
+          { label: 'Dobíjecí napětí', value: '13,9 – 14,4 V' }
+        ],
+        whatItDoes:
+          'Dodává špičkový elektrický proud (200–350 A) pro elektromotor startéru při spouštění motoru a zálohuje paměti řídicích jednotek, osvětlení a palubní síť při vypnutém motoru.',
+        howItWorks:
+          'Šest sériově zapojených článků s olověnými deskami ponořenými v roztoku kyseliny sírové (elektrolytu) generuje elektromotorické napětí cca 2,1 V na článek.',
+        faults:
+          'Sulfatace desek při častých krátkých jízdách, zoxidované svorky pólů (zvýšený přechodový odpor při startu) nebo uvolněný spodní zajišťovací třmen.',
+        symptomQuestion: 'Při otočení klíčku do polohy START pohasnou kontrolky, ozve se jen cvaknutí cívky startéru a napětí klesne pod 9 V.',
+        pin: { x: 0.76, y: 0.43 },
+        hitBox: { x: 0.69, y: 0.37, w: 0.14, h: 0.12 },
+        miniAction: null
+      },
+      {
+        id: 'alternator',
+        code: '08',
+        name: 'Alternátor a drážkový řemen',
+        shortName: 'Alternátor a řemen',
+        system: 'electric',
+        systemLabel: 'Elektrická soustava',
+        subtitle: 'Třífázový generátor poháněný 6-drážkovým řemenem od klikové hřídele',
+        cutawayTitle: 'OBR. 08 — ELEKTROMAGNETICKÁ INDUKCE A USMĚRNĚNÍ',
+        specs: [
+          { label: 'Max. nabíjecí proud', value: '90 A (1 260 W)' },
+          { label: 'Regulované napětí', value: '14,1 – 14,4 V' },
+          { label: 'Převodový poměr', value: '1 : 2,4 (klika : alt.)' },
+          { label: 'Typ řemene', value: '6PK1080 (EPDM)' }
+        ],
+        whatItDoes:
+          'Přeměňuje mechanickou energii klikové hřídele na elektrickou energii. Za běhu motoru napájí veškeré palubní spotřebiče a dobíjí akumulátor.',
+        howItWorks:
+          'Buzený elektromagnetický rotor se otáčí uvnitř třífázového měděného vinutí statoru. Vzniklý střídavý proud usměrňuje šest výkonových diod a elektronický regulátor udržuje stabilní palubní napětí.',
+        faults:
+          'Opotřebené uhlíky regulátoru napětí (svítí červená kontrolka baterie), zadřená volnoběžka řemenice alternátoru nebo zpuchřelý drážkový řemen pískající po studeném startu.',
+        symptomQuestion: 'Za jízdy se rozsvítila červená kontrolka akumulátoru a měřením na svorkách baterie je i při 2500 ot./min pouze 11,8 V.',
+        pin: { x: 0.28, y: 0.54 },
+        hitBox: { x: 0.22, y: 0.49, w: 0.12, h: 0.13 },
+        miniAction: null
+      },
+      {
+        id: 'ignition',
+        code: '09',
+        name: 'Zapalovací modul a kabely ke svíčkám',
+        shortName: 'Zapalovací modul',
+        system: 'electric',
+        systemLabel: 'Elektrická soustava',
+        subtitle: 'Dvojitá indukční cívka (DIS) a 4 vysokonapěťové kabely ke svíčkám',
+        cutawayTitle: 'OBR. 09 — TRANSFORMACE 12 V → 30 000 V A ZÁŽEH',
+        specs: [
+          { label: 'Primární napětí', value: '12 – 14 V' },
+          { label: 'Sekundární napětí', value: '25 000 – 32 000 V' },
+          { label: 'Odpor kabelů', value: '4,5 – 6,5 kΩ' },
+          { label: 'Vzdálenost elektrod', value: '0,9 – 1,0 mm' }
+        ],
+        whatItDoes:
+          'Vytváří vysokonapěťové impulzy a přivádí je přesně v okamžiku konce komprese na zapalovací svíčky, kde přeskočí jiskra a zapálí stlačenou směs paliva a vzduchu.',
+        howItWorks:
+          'Přerušením proudu v primárním vinutí zkolabuje magnetické pole v jádře cívky a v sekundárním vinutí (s mnohonásobně větším počtem závitů) se naindukuje vysoké napětí.',
+        faults:
+          'Vlasové praskliny zalévací hmoty cívky (probíjení jiskry na kostru za vlhka), zoxidované koncovky kabelů nebo opálené elektrody svíček způsobující vynechávání zážehu.',
+        symptomQuestion: 'Za deštivého počasí motor při přidání plynu cuká, běží na tři válce a diagnostika hlásí vynechávání zapalování na 2. válci.',
+        pin: { x: 0.59, y: 0.50 },
+        hitBox: { x: 0.56, y: 0.45, w: 0.08, h: 0.11 },
+        miniAction: null
+      },
+      {
+        id: 'oil_system',
+        code: '10',
+        name: 'Měrka hladiny motorového oleje',
+        shortName: 'Měrka oleje',
+        system: 'lubrication',
+        systemLabel: 'Motor a mazání',
+        subtitle: 'Vodicí trubka s ocelovou planžetou a žlutým okem zasahující do olejové vany',
+        cutawayTitle: 'OBR. 10 — KONTROLA HLADINY V OLEJOVÉ VANĚ',
+        specs: [
+          { label: 'Rozdíl MIN – MAX', value: '1,0 litr oleje' },
+          { label: 'Norma oleje', value: 'VW 502 00 / ACEA A3' },
+          { label: 'Tlak oleje (2000 ot.)', value: 'min. 2,0 bar (80 °C)' },
+          { label: 'Teplota oleje', value: '85 – 115 °C' }
+        ],
+        whatItDoes:
+          'Umožňuje rychlou mechanickou kontrolu množství motorového oleje v olejové vaně, který maže kluzná ložiska klikové hřídele, vačky i stěny válců.',
+        howItWorks:
+          'Spodní konec měrky má šrafované pole ohraničené prolisy MIN a MAX. Olejová hladina musí ležet v tomto poli (ideálně v horní třetině), aby nedošlo k zavzdušnění sacího koše čerpadla v zatáčkách.',
+        faults:
+          'Křehký a ulomený plastový trychtýř vodicí trubky měrky (do oleje se pak dostává falešný vzduch a nečistoty) nebo zanedbané dolévání oleje při vyšší spotřebě motoru.',
+        symptomQuestion: 'Při prudkém průjezdu zatáčkou problikne červená kontrolka mazání a na šrafovaném konci žluté měrky není ani stopa po oleji.',
+        pin: { x: 0.425, y: 0.57 },
+        hitBox: { x: 0.39, y: 0.51, w: 0.07, h: 0.12 },
+        miniAction: {
+          label: 'Vytáhnout měrku oleje',
+          hint: 'Kontrola hladiny:'
+        }
+      },
+      {
+        id: 'brake_booster',
+        code: '11',
+        name: 'Posilovač brzd a hlavní brzdový válec',
+        shortName: 'Posilovač brzd',
+        system: 'lubrication',
+        systemLabel: 'Mazání a brzdy',
+        subtitle: 'Podtlakový buben na motorové přepážce, nádobka DOT 4 a brzdové trubky',
+        cutawayTitle: 'OBR. 11 — PODTLAKOVÝ POSILOVAČ A HYDRAULICKÝ OKRUH',
+        specs: [
+          { label: 'Pracovní podtlak', value: '0,6 – 0,8 bar' },
+          { label: 'Násobicí poměr', value: 'cca 1 : 4,5' },
+          { label: 'Brzdová kapalina', value: 'DOT 4 (var > 230 °C)' },
+          { label: 'Interval výměny kap.', value: 'Každé 2 roky' }
+        ],
+        whatItDoes:
+          'Násobí sílu, kterou řidič působí na brzdový pedál, a převádí ji v dvoukruhovém hlavním brzdovém válci na hydraulický tlak (až 100 bar) vedený ocelovými trubkami ke kolům.',
+        howItWorks:
+          'Využívá rozdíl mezi atmosférickým tlakem a podtlakem ze sacího potrubí. Po sešlápnutí pedálu vnikne vzduch za pryžovou membránu a tlakový rozdíl pomáhá tlačit píst hlavního válce.',
+        faults:
+          'Prasklá podtlaková hadice se zpětným ventilem (pedál brzdy ztvrdne a auto brzdí jen velkou silou) nebo zavodněná brzdová kapalina s nízkým bodem varu.',
+        symptomQuestion: 'Brzdový pedál je neobvykle tvrdý, k zastavení je nutná velká síla a z prostoru motorové přepážky je slyšet syčení podtlaku.',
+        pin: { x: 0.67, y: 0.32 },
+        hitBox: { x: 0.61, y: 0.27, w: 0.12, h: 0.11 },
+        miniAction: {
+          label: 'Sešlápnout brzdový pedál',
+          hint: 'Zkouška posilovače:'
+        }
+      },
+      {
+        id: 'fuse_box',
+        code: '12',
+        name: 'Pojistková a reléová skříň',
+        shortName: 'Pojistková skříň',
+        system: 'electric',
+        systemLabel: 'Elektrická soustava',
+        subtitle: 'Motorová rozvodná skříň s nožovými pojistkami (ATO/MAXI) a výkonovými relé',
+        cutawayTitle: 'OBR. 12 — ELEKTROMAGNETICKÉ RELÉ A TAVNÁ POJISTKA',
+        specs: [
+          { label: 'Hlavní pojistky', value: '30 A – 80 A (MAXI)' },
+          { label: 'Okruhové pojistky', value: '5 A – 30 A (ATO)' },
+          { label: 'Ovládací proud relé', value: 'cca 150 mA' },
+          { label: 'Spínaný proud relé', value: 'až 40 A' }
+        ],
+        whatItDoes:
+          'Chrání kabelové svazky před přetížením a zkratem. Výkonová relé umožňují řídicí jednotce bezpečně spínat silové spotřebiče (palivové čerpadlo, saharu chladiče, zapalování).',
+        howItWorks:
+          'Tavný můstek uvnitř pojistky se při překročení jmenovitého proudu přetaví. Relé obsahuje elektromagnetickou cívku, která po nabuzení přitáhne kotvu a sepne silové kontakty.',
+        faults:
+          'Opálené silové kontakty relé palivového čerpadla (motor náhle zhasne a nejde nastartovat) nebo vyhřátá patice hlavní pojistky ventilátoru chladiče.',
+        symptomQuestion: 'Startér točí motorem, ale palivové čerpadlo neběží – kontrola odhalila přetavenou 15A pojistku a opálené spínací kontakty relé.',
+        pin: { x: 0.825, y: 0.54 },
+        hitBox: { x: 0.79, y: 0.48, w: 0.08, h: 0.12 },
+        miniAction: {
+          label: 'Sepnout cívku relé',
+          hint: 'Test elektromagnetu:'
+        }
+      },
+      {
+        id: 'washer_tank',
+        code: '13',
+        name: 'Nádržka ostřikovačů',
+        shortName: 'Nádržka ostřikovačů',
+        system: 'cooling',
+        systemLabel: 'Chladicí soustava',
+        subtitle: 'Zásobník kapaliny ostřikovačů s modrým víčkem a odstředivým čerpadlem 12 V',
+        cutawayTitle: 'OBR. 13 — ODSTŘEDIVÉ ČERPADLO A TRYSKY OSTŘIKU',
+        specs: [
+          { label: 'Objem nádržky', value: '3,2 l (bez ostř. světel)' },
+          { label: 'Pracovní tlak čerpadla', value: '1,8 – 2,2 bar' },
+          { label: 'Odběr čerpadla', value: '3,5 – 4,5 A' },
+          { label: 'Zimní směs', value: 'min. do −20 °C' }
+        ],
+        whatItDoes:
+          'Zásobuje čisticí kapalinou rozprašovací trysky čelního skla (případně i zadního okna) prostřednictvím malého elektrického čerpadla zasunutého ve spodní části nádobky.',
+        howItWorks:
+          'Po přitažení páčky stěračů roztočí elektromotorek 12 V oběžné kolo čerpadla, které vytlačí kapalinu zpětným ventilem a hadičkou k tryskám.',
+        faults:
+          'Zamrznutí letní směsi v zimě (led roztrhne tělo čerpadla nebo vytlačí hadičku z nátrubku) a ucpání zpětného ventilku vodním kamenem.',
+        symptomQuestion: 'Po prvních mrazech není při ostřikování slyšet vrčení motorku, protože letní kapalina v nádržce s modrým víčkem zamrzla.',
+        pin: { x: 0.21, y: 0.62 },
+        hitBox: { x: 0.16, y: 0.56, w: 0.10, h: 0.11 },
+        miniAction: {
+          label: 'Spustit čerpadlo ostřiku',
+          hint: 'Funkční zkouška:'
+        }
+      },
+      {
+        id: 'exhaust_lambda',
+        code: '14',
+        name: 'Výfukové svody a lambda sonda',
+        shortName: 'Výfukové svody',
+        system: 'intake',
+        systemLabel: 'Sání a výfuk',
+        subtitle: 'Litinový sběrač výfukových plynů 4–1 s tepelným štítem a regulační lambda sondou',
+        cutawayTitle: 'OBR. 14 — REGULAČNÍ LAMBDA SONDA (POMĚR λ = 1)',
+        specs: [
+          { label: 'Teplota spalin', value: '450 – 850 °C' },
+          { label: 'Pracovní teplota sondy', value: 'min. 350 °C (vyhřívaná)' },
+          { label: 'Signál bohatá směs', value: '0,75 – 0,90 V' },
+          { label: 'Signál chudá směs', value: '0,10 – 0,20 V' }
+        ],
+        whatItDoes:
+          'Výfukové svody spojují výfukové kanály všech čtyř válců do jednoho potrubí ke katalyzátoru. Lambda sonda měří zbytkový kyslík ve spalinách pro přesnou regulaci bohatosti směsi.',
+        howItWorks:
+          'Zirkoniový článek sondy porovnává obsah kyslíku ve výfuku s okolním vzduchem a generuje napětí 0,1–0,9 V, podle kterého řídicí jednotka koriguje délku vstřiku paliva.',
+        faults:
+          'Prasklé litinové svody (hlasité prskání za studena a přisávání kyslíku matoucí lambda sondu) nebo přerušené vyhřívání sondy způsobující vysokou spotřebu paliva.',
+        symptomQuestion: 'Motor má zvýšenou spotřebu paliva, z výfuku je cítit nespálený benzín a signál kyslíkové sondy před katalyzátorem neosciluje.',
+        pin: { x: 0.48, y: 0.635 },
+        hitBox: { x: 0.40, y: 0.605, w: 0.17, h: 0.06 },
+        miniAction: null
+      }
+    ];
+
+    // Car paint presets (authentic European OEM colors)
+    const CAR_PAINTS = {
+      red: { name: 'Tornádo červená', light: '#C42B23', mid: '#9E1E17', dark: '#69120D', highlight: '#E05A52' },
+      blue: { name: 'Modrá metalíza', light: '#2D5C94', mid: '#1E436E', dark: '#112742', highlight: '#5B8BC4' },
+      silver: { name: 'Stříbrná reflex', light: '#AEB6BF', mid: '#858E98', dark: '#545B63', highlight: '#D5DCE3' },
+      white: { name: 'Alpská bílá', light: '#E6E4DC', mid: '#CCC9BE', dark: '#969388', highlight: '#F7F6F2' }
+    };
+
+    // ----------------------------------------------------------------------------
+    // 2. GLOBÁLNÍ STAV DÍLENSKÉ SIMULACE
+    // ----------------------------------------------------------------------------
+    const state = {
+      selectedPartId: 'engine_block',
+      hoveredPartId: null,
+      activeSystemFilter: 'all',
+      showPins: true,
+      carPaint: 'red',
+
+      // Hood & Prop rod animation (1 = open on prop rod, 0 = latched closed)
+      hoodTarget: 1,
+      hoodProgress: 1,
+
+      // Mechanical Ignition Key Position: 0 (Off), 1 (Ignition ON), 2 (Running)
+      ignitionPos: 0,
+      crankingTimer: 0,
+      rpm: 0,
+      targetRpm: 850,
+      coolantTemp: 22,
+      isPreWarmed: false,
+      batteryVoltage: 12.4,
+      exhaustHeat: 0, // 0..1 glow intensity on cast iron manifold
+
+      // Mechanical kinematics
+      crankAngle: 0,
+      beltOffset: 0,
+      fanAngle: 0,
+      flowPhase: 0,
+      sparkStep: 0,
+      sparkTimer: 0,
+
+      // Interactive mini-tests inside right manual cutaway
+      miniStates: {
+        airboxClean: false,
+        dipstickPulled: false,
+        dipstickProgress: 0,
+        brakePressed: false,
+        brakeProgress: 0,
+        relayActive: false,
+        washerSpraying: false,
+        washerTimer: 0
+      },
+
+      // Diagnostic Test Mode
+      mode: 'explore', // 'explore' | 'quiz'
+      quizQueue: [],
+      quizCurrentIdx: 0,
+      quizScore: 0,
+      quizFinished: false,
+      quizLastWrongId: null,
+      quizFlashTimer: 0,
+
+      soundEnabled: false
+    };
+
+    // ----------------------------------------------------------------------------
+    // 3. PROCEDURÁLNÍ TEXTURY MATERIÁLŮ (OFFSCREEN CANVAS PATTERNS)
+    // ----------------------------------------------------------------------------
+    const textures = {
+      castAluminum: null,
+      crinkleBlack: null,
+      feltInsulation: null
+    };
+
+    function createProceduralTextures(ctx) {
+      // 1. Cast Aluminum sand-grain texture
+      const alumC = document.createElement('canvas');
+      alumC.width = 64;
+      alumC.height = 64;
+      const aCtx = alumC.getContext('2d');
+      aCtx.fillStyle = '#9BA2AA';
+      aCtx.fillRect(0, 0, 64, 64);
+      for (let i = 0; i < 420; i++) {
+        const x = (i * 37) % 64;
+        const y = (i * 53) % 64;
+        aCtx.fillStyle = i % 2 === 0 ? 'rgba(255,255,255,0.14)' : 'rgba(25,30,36,0.16)';
+        aCtx.fillRect(x, y, 1.5, 1.5);
+      }
+      textures.castAluminum = ctx.createPattern(alumC, 'repeat');
+
+      // 2. Wrinkle / Crinkle Black Powdercoat (valve cover, airbox, brake booster)
+      const blkC = document.createElement('canvas');
+      blkC.width = 48;
+      blkC.height = 48;
+      const bCtx = blkC.getContext('2d');
+      bCtx.fillStyle = '#1E2125';
+      bCtx.fillRect(0, 0, 48, 48);
+      for (let i = 0; i < 360; i++) {
+        const x = (i * 29) % 48;
+        const y = (i * 43) % 48;
+        bCtx.fillStyle = i % 3 === 0 ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.28)';
+        bCtx.fillRect(x, y, 1.4, 1.4);
+      }
+      textures.crinkleBlack = ctx.createPattern(blkC, 'repeat');
+
+      // 3. Fibrous Acoustic Felt Hood Liner
+      const feltC = document.createElement('canvas');
+      feltC.width = 64;
+      feltC.height = 64;
+      const fCtx = feltC.getContext('2d');
+      fCtx.fillStyle = '#23221F';
+      fCtx.fillRect(0, 0, 64, 64);
+      fCtx.strokeStyle = 'rgba(168, 162, 148, 0.11)';
+      fCtx.lineWidth = 1;
+      for (let i = 0; i < 48; i++) {
+        const x1 = (i * 19) % 64;
+        const y1 = (i * 31) % 64;
+        fCtx.beginPath();
+        fCtx.moveTo(x1, y1);
+        fCtx.lineTo(x1 + ((i % 5) - 2) * 5, y1 + 6);
+        fCtx.stroke();
+      }
+      textures.feltInsulation = ctx.createPattern(feltC, 'repeat');
+    }
+
+    // ----------------------------------------------------------------------------
+    // 4. WEB AUDIO API – SYNTÉZA ZVUKU 4-VÁLCOVÉHO MOTORU
+    // ----------------------------------------------------------------------------
+    class EngineAudioSynth {
+      constructor() {
+        this.ctx = null;
+        this.oscCombustion = null;
+        this.oscIntake = null;
+        this.filter = null;
+        this.gain = null;
+        this.initialized = false;
+      }
+
+      init() {
+        if (this.initialized) return;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        this.ctx = new AudioCtx();
+
+        this.oscCombustion = this.ctx.createOscillator();
+        this.oscIntake = this.ctx.createOscillator();
+        this.filter = this.ctx.createBiquadFilter();
+        this.gain = this.ctx.createGain();
+
+        this.oscCombustion.type = 'sawtooth';
+        this.oscIntake.type = 'triangle';
+        this.filter.type = 'lowpass';
+        this.filter.frequency.value = 150;
+        this.gain.gain.value = 0.0001;
+
+        this.oscCombustion.connect(this.filter);
+        this.oscIntake.connect(this.filter);
+        this.filter.connect(this.gain);
+        this.gain.connect(this.ctx.destination);
+
+        this.oscCombustion.start();
+        this.oscIntake.start();
+        this.initialized = true;
+      }
+
+      update(isRunning, rpm, enabled) {
+        if (!enabled) {
+          if (this.initialized && this.gain) {
+            this.gain.gain.setTargetAtTime(0.0001, this.ctx.currentTime, 0.06);
+          }
+          return;
+        }
+        if (!this.initialized) this.init();
+        if (!this.ctx) return;
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+
+        if (!isRunning || rpm < 120) {
+          this.gain.gain.setTargetAtTime(0.0001, this.ctx.currentTime, 0.08);
+          return;
+        }
+
+        // 4-cylinder firing frequency = (RPM / 60) * 2
+        const fireHz = (rpm / 60) * 2;
+        this.oscCombustion.frequency.setTargetAtTime(fireHz, this.ctx.currentTime, 0.04);
+        this.oscIntake.frequency.setTargetAtTime(fireHz * 0.5, this.ctx.currentTime, 0.04);
+        this.filter.frequency.setTargetAtTime(125 + (rpm / 6000) * 440, this.ctx.currentTime, 0.05);
+        const level = 0.03 + (rpm / 6000) * 0.045;
+        this.gain.gain.setTargetAtTime(level, this.ctx.currentTime, 0.05);
+      }
+    }
+    const engineAudio = new EngineAudioSynth();
+
+    // ----------------------------------------------------------------------------
+    // 5. DOM REFERENCE A OVLÁDACÍ PRVKY DÍLENSKÉHO MANUÁLU
+    // ----------------------------------------------------------------------------
+    const engineCanvas = document.getElementById('engineBayCanvas');
+    const engineCtx = engineCanvas.getContext('2d');
+    const inspectorCanvas = document.getElementById('inspectorAnimCanvas');
+    const inspectorCtx = inspectorCanvas.getContext('2d');
+
+    createProceduralTextures(engineCtx);
+
+    const partSelectDropdown = document.getElementById('partSelectDropdown');
+    const rpmSlider = document.getElementById('rpmSlider');
+    const rpmReadout = document.getElementById('rpmReadout');
+    const tempReadout = document.getElementById('tempReadout');
+    const voltReadout = document.getElementById('voltReadout');
+
+    // Populate dropdown
+    ENGINE_PARTS.forEach((p) => {
+      const opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = `${p.code} — ${p.shortName}`;
+      partSelectDropdown.appendChild(opt);
+    });
+
+    function getPartById(id) {
+      return ENGINE_PARTS.find(p => p.id === id) || ENGINE_PARTS[0];
+    }
+
+    function selectPart(partId, fromCanvas = false) {
+      state.selectedPartId = partId;
+      partSelectDropdown.value = partId;
+
+      const part = getPartById(partId);
+
+      document.getElementById('manualPartCode').textContent = `POZICE ${part.code}`;
+      document.getElementById('manualSystemTag').textContent = part.systemLabel.toUpperCase();
+      document.getElementById('inspectorTitle').textContent = part.name;
+      document.getElementById('inspectorSubtitle').textContent = part.subtitle;
+      document.getElementById('cutawayCaption').textContent = part.cutawayTitle;
+      document.getElementById('inspectorWhatItDoes').textContent = part.whatItDoes;
+      document.getElementById('inspectorHowItWorks').textContent = part.howItWorks;
+      document.getElementById('inspectorFaults').textContent = part.faults;
+      document.getElementById('manualPageCounter').textContent = `STR. ${part.code} / 14`;
+
+      // Render 2x2 technical specification table
+      const specsGrid = document.getElementById('specsGrid');
+      specsGrid.innerHTML = part.specs.map(s => `
+        <div class="flex items-baseline justify-between border-b border-paper-border/70 pb-0.5">
+          <span class="text-ink-500">${s.label}:</span>
+          <span class="font-semibold text-ink-900">${s.value}</span>
+        </div>
+      `).join('');
+
+      // Mini-action bar
+      const miniBar = document.getElementById('miniActionBar');
+      const miniHint = document.getElementById('miniActionHint');
+      if (part.miniAction) {
+        miniBar.classList.remove('hidden');
+        miniHint.textContent = part.miniAction.hint;
+        updateMiniActionButtonLabel();
+      } else {
+        miniBar.classList.add('hidden');
+      }
+
+      if (state.mode === 'quiz' && fromCanvas && !state.quizFinished) {
+        handleQuizGuess(partId);
+      }
+    }
+
+    function updateMiniActionButtonLabel() {
+      const id = state.selectedPartId;
+      const btn = document.getElementById('btnMiniAction');
+      if (id === 'airbox') {
+        btn.textContent = state.miniStates.airboxClean ? 'Založit zanesený filtr' : 'Vložit novou vložku';
+      } else if (id === 'oil_system') {
+        btn.textContent = state.miniStates.dipstickPulled ? 'Zasunout měrku' : 'Vytáhnout měrku oleje';
+      } else if (id === 'brake_booster') {
+        btn.textContent = state.miniStates.brakePressed ? 'Uvolnit pedál brzdy' : 'Sešlápnout pedál brzdy';
+      } else if (id === 'fuse_box') {
+        btn.textContent = state.miniStates.relayActive ? 'Odpojit cívku relé' : 'Sepnout relé (12 V)';
+      } else if (id === 'washer_tank') {
+        btn.textContent = 'Spustit ostřikovač';
+      }
+    }
+
+    document.getElementById('btnMiniAction').addEventListener('click', () => {
+      const id = state.selectedPartId;
+      if (id === 'airbox') state.miniStates.airboxClean = !state.miniStates.airboxClean;
+      else if (id === 'oil_system') state.miniStates.dipstickPulled = !state.miniStates.dipstickPulled;
+      else if (id === 'brake_booster') state.miniStates.brakePressed = !state.miniStates.brakePressed;
+      else if (id === 'fuse_box') state.miniStates.relayActive = !state.miniStates.relayActive;
+      else if (id === 'washer_tank') {
+        state.miniStates.washerSpraying = true;
+        state.miniStates.washerTimer = 2.5;
+      }
+      updateMiniActionButtonLabel();
+    });
+
+    partSelectDropdown.addEventListener('change', (e) => selectPart(e.target.value, false));
+    document.getElementById('btnPrevPart').addEventListener('click', () => {
+      const idx = ENGINE_PARTS.findIndex(p => p.id === state.selectedPartId);
+      selectPart(ENGINE_PARTS[(idx - 1 + ENGINE_PARTS.length) % ENGINE_PARTS.length].id, false);
+    });
+    document.getElementById('btnNextPart').addEventListener('click', () => {
+      const idx = ENGINE_PARTS.findIndex(p => p.id === state.selectedPartId);
+      selectPart(ENGINE_PARTS[(idx + 1) % ENGINE_PARTS.length].id, false);
+    });
+
+    // Paint swatch switching
+    document.querySelectorAll('.paint-swatch').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.carPaint = btn.dataset.paint;
+        document.querySelectorAll('.paint-swatch').forEach(b => {
+          b.classList.remove('border-2', 'border-amber-400');
+          b.classList.add('border', 'border-steel-600');
+        });
+        btn.classList.remove('border', 'border-steel-600');
+        btn.classList.add('border-2', 'border-amber-400');
+      });
+    });
+
+    // Hood Prop Rod & Close/Open Toggle
+    function setHoodOpen(open) {
+      state.hoodTarget = open ? 1 : 0;
+      document.getElementById('hoodBtnText').textContent = open
+        ? 'Odjistit vzpěru a zavřít kapotu'
+        : 'Otevřít kapotu a zajistit vzpěrou';
+      document.getElementById('hoodLatchIndicator').className = open
+        ? 'w-2 h-2 rounded-full bg-emerald-500'
+        : 'w-2 h-2 rounded-full bg-amber-500';
+    }
+    document.getElementById('btnToggleHood').addEventListener('click', () => {
+      setHoodOpen(state.hoodTarget < 0.5);
+    });
+
+    // Mechanical 3-Position Ignition Switch (0 / I / START)
+    function setIgnition(pos) {
+      if (pos === 0) {
+        state.ignitionPos = 0;
+        state.crankingTimer = 0;
+        rpmSlider.disabled = true;
+      } else if (pos === 1) {
+        state.ignitionPos = 1;
+        state.crankingTimer = 0;
+        rpmSlider.disabled = true;
+      } else if (pos === 2) {
+        state.ignitionPos = 2;
+        state.crankingTimer = 0.65;
+        state.targetRpm = Number(rpmSlider.value) || 850;
+        rpmSlider.disabled = false;
+      }
+      updateIgnitionButtonsUI();
+    }
+
+    function updateIgnitionButtonsUI() {
+      const b0 = document.getElementById('ignPos0');
+      const b1 = document.getElementById('ignPos1');
+      const bS = document.getElementById('ignPosStart');
+
+      b0.className = 'ign-btn px-2.5 py-1.5 rounded-[2px] font-mono text-xs font-bold border transition ' +
+        (state.ignitionPos === 0 ? 'bg-amber-600 text-steel-950 border-amber-400' : 'bg-steel-900 text-stone-300 border-steel-700 hover:border-stone-500');
+      b1.className = 'ign-btn px-2.5 py-1.5 rounded-[2px] font-mono text-xs font-bold border transition ' +
+        (state.ignitionPos === 1 ? 'bg-amber-600 text-steel-950 border-amber-400' : 'bg-steel-900 text-stone-300 border-steel-700 hover:border-stone-500');
+      bS.className = 'ign-btn px-3 py-1.5 rounded-[2px] font-display text-xs uppercase tracking-wider font-bold border transition ' +
+        (state.ignitionPos === 2 ? 'bg-emerald-600 text-steel-950 border-emerald-400' : 'bg-steel-900 text-emerald-400 border-emerald-800/80 hover:bg-emerald-950');
+    }
+
+    document.getElementById('ignPos0').addEventListener('click', () => setIgnition(0));
+    document.getElementById('ignPos1').addEventListener('click', () => setIgnition(1));
+    document.getElementById('ignPosStart').addEventListener('click', () => setIgnition(2));
+
+    // Throttle controls
+    rpmSlider.addEventListener('input', (e) => {
+      state.targetRpm = Number(e.target.value);
+    });
+
+    document.getElementById('btnBlipThrottle').addEventListener('click', () => {
+      if (state.ignitionPos !== 2) setIgnition(2);
+      state.targetRpm = 4900;
+      rpmSlider.value = 4900;
+      setTimeout(() => {
+        if (state.ignitionPos === 2) {
+          state.targetRpm = 850;
+          rpmSlider.value = 850;
+        }
+      }, 700);
+    });
+
+    document.getElementById('btnToggleWarmup').addEventListener('click', (e) => {
+      state.isPreWarmed = !state.isPreWarmed;
+      state.coolantTemp = state.isPreWarmed ? 93 : 22;
+      e.target.textContent = state.isPreWarmed ? '22°' : '92°';
+    });
+
+    document.getElementById('btnToggleSound').addEventListener('click', () => {
+      state.soundEnabled = !state.soundEnabled;
+      document.getElementById('soundOffIcon').classList.toggle('hidden', state.soundEnabled);
+      document.getElementById('soundOnIcon').classList.toggle('hidden', !state.soundEnabled);
+      if (state.soundEnabled) engineAudio.init();
+    });
+
+    // Circuit Filters
+    const circuitNames = {
+      all: 'SCHÉMA: CELKOVÝ POHLED DO MOTOROVÉHO PROSTORU',
+      cooling: 'OKRUH CHLAZENÍ: CHLADIČ – TERMOSTAT – EXPANZNÍ NÁDOBKA',
+      intake: 'OKRUH SÁNÍ A VÝFUKU: AIRBOX – ŠKRTICÍ KLAPKA – SVODY 4-1',
+      electric: 'ELEKTRICKÁ SOUSTAVA: BATERIE – ALTERNÁTOR – ZAPALOVÁNÍ – POJISTKY',
+      lubrication: 'MAZÁNÍ A BRZDY: OLEJOVÁ VANA – MĚRKA – PODTLAKOVÝ POSILOVAČ'
+    };
+
+    document.querySelectorAll('.filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.activeSystemFilter = btn.dataset.system;
+        document.getElementById('circuitDiagramHint').textContent = circuitNames[state.activeSystemFilter];
+        document.querySelectorAll('.filter-pill').forEach(b => {
+          b.className = 'filter-pill px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold bg-steel-950 text-stone-300 hover:text-white border border-steel-700 transition whitespace-nowrap flex items-center gap-1.5';
+        });
+        btn.className = 'filter-pill active px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold bg-amber-600 text-steel-950 transition whitespace-nowrap flex items-center gap-1.5';
+      });
+    });
+
+    document.getElementById('chkShowPins').addEventListener('change', (e) => {
+      state.showPins = e.target.checked;
+    });
+
+    // ----------------------------------------------------------------------------
+    // 6. DIAGNOSTICKÝ TEST ZNALOSTÍ (PODLE PROJEVU ZÁVADY NEBO FUNKCE)
+    // ----------------------------------------------------------------------------
+    function startQuiz() {
+      state.mode = 'quiz';
+      state.quizScore = 0;
+      state.quizCurrentIdx = 0;
+      state.quizFinished = false;
+      state.quizLastWrongId = null;
+      setHoodOpen(true);
+
+      state.quizQueue = [...ENGINE_PARTS].sort(() => Math.random() - 0.5).slice(0, 10);
+
+      document.getElementById('btnModeQuiz').className = 'px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold bg-amber-600 text-steel-950 transition flex items-center gap-1.5';
+      document.getElementById('btnModeExplore').className = 'px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold text-stone-300 hover:text-white transition';
+      document.getElementById('quizBanner').classList.remove('hidden');
+      document.getElementById('btnQuizRestart').classList.add('hidden');
+      document.getElementById('btnQuizHint').classList.remove('hidden');
+
+      updateQuizUI();
+    }
+
+    function stopQuiz() {
+      state.mode = 'explore';
+      document.getElementById('btnModeExplore').className = 'px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold bg-amber-600 text-steel-950 transition';
+      document.getElementById('btnModeQuiz').className = 'px-2.5 py-1 rounded-[2px] font-display text-xs uppercase tracking-wider font-semibold text-stone-300 hover:text-white transition flex items-center gap-1.5';
+      document.getElementById('quizBanner').classList.add('hidden');
+    }
+
+    function updateQuizUI() {
+      document.getElementById('quizScoreText').textContent = `${state.quizScore}/${state.quizQueue.length}`;
+      if (state.quizFinished) {
+        document.getElementById('quizProgressBadge').textContent = 'VÝSLEDEK';
+        document.getElementById('quizTypeLabel').textContent = 'DIAGNOSTICKÝ TEST DOKONČEN';
+        document.getElementById('quizPromptText').textContent =
+          `Správně určeno ${state.quizScore} z ${state.quizQueue.length} součástek.`;
+        document.getElementById('quizFeedbackText').textContent =
+          state.quizScore >= 8
+            ? 'Výborná orientace v motorovém prostoru i diagnostice závad.'
+            : 'Doporučujeme projít jednotlivé pozice 01–14 v technickém průvodci.';
+        document.getElementById('btnQuizRestart').classList.remove('hidden');
+        document.getElementById('btnQuizHint').classList.add('hidden');
+        return;
+      }
+
+      const target = state.quizQueue[state.quizCurrentIdx];
+      const bySymptom = state.quizCurrentIdx % 2 === 0;
+      document.getElementById('quizProgressBadge').textContent = `ÚKOL ${String(state.quizCurrentIdx + 1).padStart(2, '0')}/10`;
+      document.getElementById('quizTypeLabel').textContent = bySymptom
+        ? 'URČETE VADNOU SOUČÁSTKU DLE PROJEVU ZÁVADY:'
+        : 'NAJDĚTE SOUČÁSTKU DLE TECHNICKÉHO POPISU:';
+      document.getElementById('quizPromptText').textContent = bySymptom
+        ? `„${target.symptomQuestion}“`
+        : target.subtitle;
+      document.getElementById('quizFeedbackText').textContent = 'Klikněte na příslušný díl v motorovém prostoru.';
+    }
+
+    function handleQuizGuess(clickedId) {
+      const target = state.quizQueue[state.quizCurrentIdx];
+      if (!target) return;
+
+      if (clickedId === target.id) {
+        state.quizScore++;
+        state.quizLastWrongId = null;
+        document.getElementById('quizFeedbackText').innerHTML =
+          `<span class="text-emerald-400 font-bold">SPRÁVNĚ:</span> Pozice ${target.code} — ${target.name}.`;
+        setTimeout(() => {
+          state.quizCurrentIdx++;
+          if (state.quizCurrentIdx >= state.quizQueue.length) state.quizFinished = true;
+          updateQuizUI();
+        }, 750);
+      } else {
+        const wrong = getPartById(clickedId);
+        state.quizLastWrongId = clickedId;
+        state.quizFlashTimer = 1.0;
+        document.getElementById('quizFeedbackText').innerHTML =
+          `<span class="text-red-400 font-bold">CHYBA:</span> Vybrali jste pozici ${wrong.code} (${wrong.shortName}). Hledejte dál.`;
+      }
+    }
+
+    document.getElementById('btnModeExplore').addEventListener('click', stopQuiz);
+    document.getElementById('btnModeQuiz').addEventListener('click', startQuiz);
+    document.getElementById('btnQuizRestart').addEventListener('click', startQuiz);
+    document.getElementById('btnQuizHint').addEventListener('click', () => {
+      if (state.quizFinished) return;
+      const target = state.quizQueue[state.quizCurrentIdx];
+      document.getElementById('quizFeedbackText').textContent =
+        `Nápověda z manuálu: Okruh „${target.systemLabel}“, pozice ${target.code}.`;
+    });
+
+    // ----------------------------------------------------------------------------
+    // 7. INTERAKCE S HLAVNÍM CANVASem (HIT-TESTING A ZAMĚŘOVAČ)
+    // ----------------------------------------------------------------------------
+    function resizeCanvasToContainer(canvas) {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.max(1, Math.floor(rect.width * dpr));
+      const h = Math.max(1, Math.floor(rect.height * dpr));
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+      }
+      return { w, h, dpr };
+    }
+
+    function getNormalizedCoords(canvas, clientX, clientY) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        nx: (clientX - rect.left) / rect.width,
+        ny: (clientY - rect.top) / rect.height
+      };
+    }
+
+    function findPartAt(nx, ny) {
+      if (state.hoodProgress < 0.45) return null;
+
+      // Priority 1: Numbered position markers (01-14)
+      let bestPin = null;
+      let bestDist = 0.038;
+      for (const part of ENGINE_PARTS) {
+        const dx = nx - part.pin.x;
+        const dy = (ny - part.pin.y) * 0.72;
+        const d = Math.hypot(dx, dy);
+        if (d < bestDist) {
+          bestDist = d;
+          bestPin = part;
+        }
+      }
+      if (bestPin) return bestPin;
+
+      // Priority 2: Component bounding boxes (foreground parts last -> checked first)
+      for (let i = ENGINE_PARTS.length - 1; i >= 0; i--) {
+        const p = ENGINE_PARTS[i];
+        const b = p.hitBox;
+        if (nx >= b.x && nx <= b.x + b.w && ny >= b.y && ny <= b.y + b.h) {
+          return p;
+        }
+      }
+      return null;
+    }
+
+    engineCanvas.addEventListener('mousemove', (e) => {
+      const { nx, ny } = getNormalizedCoords(engineCanvas, e.clientX, e.clientY);
+      const hit = findPartAt(nx, ny);
+      state.hoveredPartId = hit ? hit.id : null;
+      engineCanvas.style.cursor = hit || state.hoodProgress < 0.45 ? 'pointer' : 'crosshair';
+    });
+
+    engineCanvas.addEventListener('mouseleave', () => {
+      state.hoveredPartId = null;
+    });
+
+    engineCanvas.addEventListener('click', (e) => {
+      const { nx, ny } = getNormalizedCoords(engineCanvas, e.clientX, e.clientY);
+      if (state.hoodProgress < 0.45) {
+        setHoodOpen(true);
+        return;
+      }
+      // Clicking hood prop rod unlatches and closes hood
+      if (nx > 0.12 && nx < 0.21 && ny > 0.14 && ny < 0.36) {
+        setHoodOpen(false);
+        return;
+      }
+      const hit = findPartAt(nx, ny);
+      if (hit) {
+        selectPart(hit.id, true);
+      }
+    });
+
+    engineCanvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) {
+        const t = e.touches[0];
+        const { nx, ny } = getNormalizedCoords(engineCanvas, t.clientX, t.clientY);
+        if (state.hoodProgress < 0.45) {
+          setHoodOpen(true);
+          return;
+        }
+        const hit = findPartAt(nx, ny);
+        if (hit) {
+          state.hoveredPartId = hit.id;
+          selectPart(hit.id, true);
+        }
+      }
+    }, { passive: true });
+
+    // ----------------------------------------------------------------------------
+    // 8. POMOCNÉ KRESLICÍ FUNKCE PRO REALISTICKÉ DÍLENSKÉ MATERIÁLY
+    // ----------------------------------------------------------------------------
+    function drawRoundRect(ctx, x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    // Draw stainless steel worm-drive hose clamp (eskapáska)
+    function drawHoseClamp(ctx, x, y, angle, width) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(angle);
+      ctx.fillStyle = '#CBD5E1';
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      ctx.fillRect(-width * 0.5, -2.5, width, 5);
+      ctx.strokeRect(-width * 0.5, -2.5, width, 5);
+      // Screw housing box
+      ctx.fillStyle = '#94A3B8';
+      ctx.fillRect(-3.5, -4, 7, 8);
+      ctx.strokeRect(-3.5, -4, 7, 8);
+      ctx.restore();
+    }
+
+    // Draw hex bolt head
+    function drawHexBolt(ctx, x, y, r = 2.6) {
+      ctx.save();
+      ctx.fillStyle = '#9CA3AF';
+      ctx.strokeStyle = '#1F2937';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      for (let i = 0; i < 6; i++) {
+        const a = (i * Math.PI) / 3;
+        const bx = x + Math.cos(a) * r;
+        const by = y + Math.sin(a) * r;
+        if (i === 0) ctx.moveTo(bx, by);
+        else ctx.lineTo(bx, by);
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // ----------------------------------------------------------------------------
+    // 9. VYKRESLENÍ REALISTICKÉHO MOTOROVÉHO PROSTORU SE ZVEDNUTOU KAPOTOU
+    // ----------------------------------------------------------------------------
+    function drawEngineBayScene(ctx, w, h) {
+      ctx.clearRect(0, 0, w, h);
+
+      const paint = CAR_PAINTS[state.carPaint];
+      const isRunning = state.ignitionPos === 2 && state.rpm > 120;
+
+      // Workshop concrete floor & technical coordinate grid
+      ctx.fillStyle = '#141619';
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+      ctx.lineWidth = 1;
+      const step = Math.max(24, w / 32);
+      for (let gx = 0; gx < w; gx += step) {
+        ctx.beginPath();
+        ctx.moveTo(gx, 0);
+        ctx.lineTo(gx, h);
+        ctx.stroke();
+      }
+      for (let gy = 0; gy < h; gy += step) {
+        ctx.beginPath();
+        ctx.moveTo(0, gy);
+        ctx.lineTo(w, gy);
+        ctx.stroke();
+      }
+
+      // Ground contact shadow beneath vehicle
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+      ctx.beginPath();
+      ctx.ellipse(w * 0.5, h * 0.885, w * 0.44, h * 0.065, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Engine mount vibration offset
+      const vibAmp = isRunning ? (0.6 + (state.rpm / 6000) * 1.7) * (w / 1000) : 0;
+      const vibX = isRunning ? Math.sin(state.crankAngle * 2) * vibAmp * 0.5 : 0;
+      const vibY = isRunning ? Math.cos(state.crankAngle * 4) * vibAmp : 0;
+
+      // --------------------------------------------------------------------------
+      // A) WINDSHIELD, WIPERS & COWL PANEL (Čelní sklo a torpédo)
+      // --------------------------------------------------------------------------
+      ctx.save();
+      const glassGrad = ctx.createLinearGradient(w * 0.5, h * 0.15, w * 0.5, h * 0.30);
+      glassGrad.addColorStop(0, '#263038');
+      glassGrad.addColorStop(0.6, '#181E24');
+      glassGrad.addColorStop(1, '#101418');
+      ctx.fillStyle = glassGrad;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.23, h * 0.16);
+      ctx.lineTo(w * 0.77, h * 0.16);
+      ctx.lineTo(w * 0.84, h * 0.30);
+      ctx.lineTo(w * 0.16, h * 0.30);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#3B4047';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Subtle diagonal glass reflection
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+      ctx.lineWidth = 14;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.30, h * 0.17);
+      ctx.lineTo(w * 0.42, h * 0.29);
+      ctx.stroke();
+
+      // Wiper arms
+      ctx.strokeStyle = '#0D0E10';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.24, h * 0.29);
+      ctx.lineTo(w * 0.47, h * 0.27);
+      ctx.moveTo(w * 0.50, h * 0.29);
+      ctx.lineTo(w * 0.73, h * 0.27);
+      ctx.stroke();
+
+      // Black plastic louvered cowl (Torpédo) & rubber hood seal
+      ctx.fillStyle = '#181A1D';
+      ctx.beginPath();
+      ctx.moveTo(w * 0.15, h * 0.30);
+      ctx.lineTo(w * 0.85, h * 0.30);
+      ctx.lineTo(w * 0.87, h * 0.345);
+      ctx.lineTo(w * 0.13, h * 0.345);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#2F3338';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.14, h * 0.342);
+      ctx.lineTo(w * 0.86, h * 0.342);
+      ctx.stroke();
+      ctx.restore();
+
+      // --------------------------------------------------------------------------
+      // B) ENGINE BAY CAVITY, STRUT TOWERS & PAINTED FENDERS
+      // --------------------------------------------------------------------------
+      ctx.save();
+      const bayGrad = ctx.createLinearGradient(w * 0.5, h * 0.34, w * 0.5, h * 0.75);
+      bayGrad.addColorStop(0, '#131518');
+      bayGrad.addColorStop(0.5, '#191C20');
+      bayGrad.addColorStop(1, '#101214');
+      ctx.fillStyle = bayGrad;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.15, h * 0.34);
+      ctx.lineTo(w * 0.85, h * 0.34);
+      ctx.lineTo(w * 0.89, h * 0.75);
+      ctx.lineTo(w * 0.11, h * 0.75);
+      ctx.closePath();
+      ctx.fill();
+
+      // MacPherson Strut Towers (Horní uložení předních tlumičů s 3 maticemi)
+      const drawStrutTower = (cx, cy) => {
+        ctx.save();
+        ctx.fillStyle = paint.dark;
+        ctx.strokeStyle = '#2D3136';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, w * 0.043, h * 0.034, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#1E2023';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, w * 0.024, h * 0.019, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        drawHexBolt(ctx, cx, cy, 4);
+        for (let a = 0; a < 3; a++) {
+          const ang = (a * Math.PI * 2) / 3 - Math.PI / 6;
+          drawHexBolt(ctx, cx + Math.cos(ang) * w * 0.031, cy + Math.sin(ang) * h * 0.023, 2.5);
+        }
+        ctx.restore();
+      };
+      drawStrutTower(w * 0.185, h * 0.47);
+      drawStrutTower(w * 0.815, h * 0.47);
+
+      // Painted Left & Right Front Fenders
+      const fenderGradL = ctx.createLinearGradient(w * 0.08, h * 0.35, w * 0.16, h * 0.74);
+      fenderGradL.addColorStop(0, paint.light);
+      fenderGradL.addColorStop(0.5, paint.mid);
+      fenderGradL.addColorStop(1, paint.dark);
+      ctx.fillStyle = fenderGradL;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.13, h * 0.34);
+      ctx.lineTo(w * 0.165, h * 0.34);
+      ctx.lineTo(w * 0.125, h * 0.74);
+      ctx.lineTo(w * 0.075, h * 0.72);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = paint.highlight;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      const fenderGradR = ctx.createLinearGradient(w * 0.92, h * 0.35, w * 0.84, h * 0.74);
+      fenderGradR.addColorStop(0, paint.light);
+      fenderGradR.addColorStop(0.5, paint.mid);
+      fenderGradR.addColorStop(1, paint.dark);
+      ctx.fillStyle = fenderGradR;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.87, h * 0.34);
+      ctx.lineTo(w * 0.835, h * 0.34);
+      ctx.lineTo(w * 0.875, h * 0.74);
+      ctx.lineTo(w * 0.925, h * 0.72);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = paint.highlight;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.restore();
+
+      // --------------------------------------------------------------------------
+      // C) ALL 14 REALISTIC ENGINE BAY COMPONENTS
+      // --------------------------------------------------------------------------
+      const isDimmed = (part) => {
+        if (state.activeSystemFilter === 'all') return false;
+        if (state.hoveredPartId === part.id || state.selectedPartId === part.id) return false;
+        return state.activeSystemFilter !== part.system;
+      };
+
+      const isSelectedOrHovered = (part) =>
+        state.selectedPartId === part.id || state.hoveredPartId === part.id;
+
+      // 11. POSILOVAČ BRZD A HLAVNÍ BRZDOVÝ VÁLEC
+      {
+        const part = getPartById('brake_booster');
+        ctx.save();
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const bx = w * 0.67, by = h * 0.33;
+        ctx.fillStyle = textures.crinkleBlack || '#1E2125';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#4B5563';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2 : 1.2;
+        ctx.beginPath();
+        ctx.ellipse(bx, by, w * 0.048, h * 0.042, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#D6D3C9';
+        drawRoundRect(ctx, bx - w * 0.017, by + h * 0.012, w * 0.034, h * 0.034, 3);
+        ctx.fill();
+        ctx.strokeStyle = '#6B7280';
+        ctx.stroke();
+
+        ctx.fillStyle = '#D97706';
+        drawRoundRect(ctx, bx - w * 0.014, by + h * 0.024, w * 0.028, h * 0.017, 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#CA8A04';
+        ctx.beginPath();
+        ctx.ellipse(bx, by + h * 0.013, w * 0.011, h * 0.006, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Steel brake lines
+        ctx.strokeStyle = '#9CA3AF';
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(bx + w * 0.014, by + h * 0.035);
+        ctx.lineTo(bx + w * 0.045, by + h * 0.055);
+        ctx.moveTo(bx + w * 0.014, by + h * 0.042);
+        ctx.lineTo(bx + w * 0.042, by + h * 0.064);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 6. ŠKRTICÍ KLAPKA A SACÍ POTRUBÍ
+      {
+        const part = getPartById('throttle_body');
+        ctx.save();
+        ctx.translate(vibX * 0.85, vibY * 0.85);
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        ctx.fillStyle = textures.crinkleBlack || '#1F2328';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#4B5563';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2 : 1.2;
+        drawRoundRect(ctx, w * 0.43, h * 0.368, w * 0.155, h * 0.062, 5);
+        ctx.fill();
+        ctx.stroke();
+
+        for (let r = 0; r < 4; r++) {
+          const rx = w * (0.443 + r * 0.034);
+          ctx.fillStyle = '#2A2F36';
+          drawRoundRect(ctx, rx, h * 0.378, w * 0.023, h * 0.072, 3);
+          ctx.fill();
+        }
+
+        ctx.fillStyle = textures.castAluminum || '#9BA2AA';
+        ctx.strokeStyle = '#374151';
+        drawRoundRect(ctx, w * 0.575, h * 0.382, w * 0.040, h * 0.048, 4);
+        ctx.fill();
+        ctx.stroke();
+
+        const throttleRot = isRunning ? ((state.rpm - 850) / 5150) * 1.1 : 0;
+        ctx.save();
+        ctx.translate(w * 0.595, h * 0.405);
+        ctx.rotate(throttleRot);
+        ctx.fillStyle = '#D97706';
+        ctx.beginPath();
+        ctx.arc(0, 0, w * 0.011, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#E5E7EB';
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(w * 0.014, -h * 0.008);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.restore();
+      }
+
+      // 3. EXPANZNÍ NÁDOBKA CHLADICÍ KAPALINY
+      {
+        const part = getPartById('expansion_tank');
+        ctx.save();
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const ex = w * 0.245, ey = h * 0.435;
+        ctx.fillStyle = 'rgba(229, 226, 217, 0.24)';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#9CA3AF';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2.2 : 1.4;
+        ctx.beginPath();
+        ctx.ellipse(ex, ey, w * 0.043, h * 0.044, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        const slosh = isRunning ? Math.sin(state.crankAngle * 1.5) * 1.5 : 0;
+        const levelLift = Math.min(1, Math.max(0, (state.coolantTemp - 20) / 72)) * 4;
+        ctx.fillStyle = 'rgba(190, 49, 68, 0.78)';
+        ctx.beginPath();
+        ctx.ellipse(ex, ey + h * 0.012 - levelLift + slosh, w * 0.038, h * 0.025, 0, 0, Math.PI);
+        ctx.fill();
+
+        ctx.strokeStyle = '#E5E7EB';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(ex - w * 0.038, ey + h * 0.002);
+        ctx.lineTo(ex - w * 0.026, ey + h * 0.002);
+        ctx.moveTo(ex - w * 0.038, ey + h * 0.018);
+        ctx.lineTo(ex - w * 0.026, ey + h * 0.018);
+        ctx.stroke();
+
+        ctx.fillStyle = '#1D4ED8';
+        ctx.beginPath();
+        ctx.ellipse(ex, ey - h * 0.039, w * 0.016, h * 0.009, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#93C5FD';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 2. CHLADIČ A SAHARA VENTILÁTORU
+      {
+        const part = getPartById('radiator');
+        ctx.save();
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const rx = w * 0.34, ry = h * 0.675, rw = w * 0.32, rh = h * 0.072;
+        ctx.fillStyle = '#14171A';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#4B5563';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2.2 : 1.4;
+        drawRoundRect(ctx, rx, ry, rw, rh, 3);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.strokeStyle = '#374151';
+        ctx.lineWidth = 1;
+        for (let fx = rx + 6; fx < rx + rw - 6; fx += 5) {
+          ctx.beginPath();
+          ctx.moveTo(fx, ry + 3);
+          ctx.lineTo(fx, ry + rh - 3);
+          ctx.stroke();
+        }
+
+        const fanCx = rx + rw * 0.5, fanCy = ry + rh * 0.5, fanR = rh * 0.42;
+        ctx.strokeStyle = '#4B5563';
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.arc(fanCx, fanCy, fanR, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(fanCx, fanCy);
+        ctx.rotate(state.fanAngle);
+        ctx.fillStyle = state.coolantTemp >= 92 ? '#9CA3AF' : '#4B5563';
+        for (let b = 0; b < 7; b++) {
+          ctx.rotate((Math.PI * 2) / 7);
+          ctx.beginPath();
+          ctx.ellipse(fanR * 0.5, 0, fanR * 0.4, 2.6, 0.35, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+        ctx.restore();
+      }
+
+      // COOLANT RUBBER HOSES WITH WORM-DRIVE CLAMPS (ESKAPÁSKY)
+      ctx.save();
+      ctx.lineCap = 'round';
+      ctx.lineWidth = Math.max(6, w * 0.0085);
+      ctx.strokeStyle = '#181A1D';
+      ctx.beginPath();
+      ctx.moveTo(w * 0.39, h * 0.55);
+      ctx.quadraticCurveTo(w * 0.33, h * 0.58, w * 0.36, h * 0.68);
+      ctx.moveTo(w * 0.62, h * 0.68);
+      ctx.quadraticCurveTo(w * 0.62, h * 0.61, w * 0.57, h * 0.57);
+      ctx.moveTo(w * 0.25, h * 0.48);
+      ctx.quadraticCurveTo(w * 0.28, h * 0.56, w * 0.35, h * 0.60);
+      ctx.stroke();
+
+      drawHoseClamp(ctx, w * 0.382, h * 0.558, -0.7, 9);
+      drawHoseClamp(ctx, w * 0.358, h * 0.668, 0.2, 9);
+      drawHoseClamp(ctx, w * 0.618, h * 0.668, -0.2, 9);
+      drawHoseClamp(ctx, w * 0.255, h * 0.492, 0.5, 8);
+
+      if (state.activeSystemFilter === 'cooling' || (isRunning && state.selectedPartId === 'thermostat')) {
+        ctx.strokeStyle = state.coolantTemp >= 88 ? '#DC2626' : '#2B7A9E';
+        ctx.lineWidth = 2.4;
+        ctx.setLineDash([7, 9]);
+        ctx.lineDashOffset = -state.flowPhase * 28;
+        ctx.beginPath();
+        ctx.moveTo(w * 0.39, h * 0.55);
+        ctx.quadraticCurveTo(w * 0.33, h * 0.58, w * 0.36, h * 0.68);
+        ctx.moveTo(w * 0.62, h * 0.68);
+        ctx.quadraticCurveTo(w * 0.62, h * 0.61, w * 0.57, h * 0.57);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      ctx.restore();
+
+      // 4. TERMOSTATICKÁ KOMORA A ČIDLO TEPLOTY
+      {
+        const part = getPartById('thermostat');
+        ctx.save();
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const tx = w * 0.35, ty = h * 0.60;
+        ctx.fillStyle = textures.castAluminum || '#9BA2AA';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#374151';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2 : 1.2;
+        ctx.beginPath();
+        ctx.arc(tx, ty, w * 0.021, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#15803D';
+        drawRoundRect(ctx, tx - w * 0.008, ty - h * 0.032, w * 0.016, h * 0.018, 2);
+        ctx.fill();
+        ctx.strokeStyle = '#86EFAC';
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 8. ALTERNÁTOR A DRÁŽKOVÝ ŘEMEN
+      {
+        const part = getPartById('alternator');
+        ctx.save();
+        ctx.translate(vibX, vibY);
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const p1x = w * 0.28, p1y = h * 0.53;
+        const p2x = w * 0.33, p2y = h * 0.61;
+        const p3x = w * 0.34, p3y = h * 0.51;
+
+        ctx.strokeStyle = '#111315';
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(p1x, p1y - 12);
+        ctx.lineTo(p3x, p3y - 10);
+        ctx.lineTo(p2x + 10, p2y);
+        ctx.lineTo(p2x - 10, p2y + 8);
+        ctx.lineTo(p1x - 12, p1y + 8);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.strokeStyle = '#6B7280';
+        ctx.lineWidth = 1.6;
+        ctx.setLineDash([4, 5]);
+        ctx.lineDashOffset = -state.beltOffset;
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = textures.castAluminum || '#9BA2AA';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#374151';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2.2 : 1.3;
+        drawRoundRect(ctx, w * 0.235, h * 0.50, w * 0.062, h * 0.075, 5);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#B45309';
+        for (let s = 0; s < 3; s++) {
+          drawRoundRect(ctx, w * 0.244, h * (0.515 + s * 0.018), w * 0.032, h * 0.009, 1.5);
+          ctx.fill();
+        }
+
+        ctx.save();
+        ctx.translate(p1x + 6, p1y + 6);
+        ctx.rotate(state.beltOffset * 0.16);
+        ctx.fillStyle = '#1F2429';
+        ctx.beginPath();
+        ctx.arc(0, 0, w * 0.015, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#9CA3AF';
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(-w * 0.011, 0);
+        ctx.lineTo(w * 0.011, 0);
+        ctx.moveTo(0, -w * 0.011);
+        ctx.lineTo(0, w * 0.011);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.restore();
+      }
+
+      // 1. BLOK MOTORU A VÍKO VENTILŮ
+      {
+        const part = getPartById('engine_block');
+        ctx.save();
+        ctx.translate(vibX, vibY);
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const ex = w * 0.37, ey = h * 0.44, ew = w * 0.22, eh = h * 0.16;
+
+        ctx.fillStyle = textures.castAluminum || '#8E949A';
+        drawRoundRect(ctx, ex + 5, ey + eh * 0.44, ew - 10, eh * 0.56, 4);
+        ctx.fill();
+
+        ctx.fillStyle = '#374151';
+        drawRoundRect(ctx, ex - 10, ey + eh * 0.32, 14, 18, 3);
+        ctx.fill();
+        drawHexBolt(ctx, ex - 3, ey + eh * 0.41, 2.5);
+
+        ctx.fillStyle = textures.crinkleBlack || '#1E2125';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#6B7280';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2.4 : 1.4;
+        drawRoundRect(ctx, ex, ey, ew, eh * 0.72, 6);
+        ctx.fill();
+        ctx.stroke();
+
+        const firingOrder = [0, 2, 3, 1];
+        for (let c = 0; c < 4; c++) {
+          const cx = ex + ew * (0.12 + c * 0.21);
+          const cy = ey + eh * 0.14;
+          const cw = ew * 0.16;
+          const ch = eh * 0.44;
+
+          ctx.fillStyle = '#25292E';
+          drawRoundRect(ctx, cx, cy, cw, ch, 3);
+          ctx.fill();
+
+          if (isRunning && firingOrder[state.sparkStep] === c) {
+            ctx.fillStyle = 'rgba(217, 119, 6, 0.32)';
+            drawRoundRect(ctx, cx, cy, cw, ch, 3);
+            ctx.fill();
+          }
+
+          ctx.fillStyle = '#9CA3AF';
+          ctx.font = `bold ${Math.max(9, Math.round(w * 0.01))}px "IBM Plex Mono", monospace`;
+          ctx.textAlign = 'center';
+          ctx.fillText(`${c + 1}`, cx + cw * 0.5, cy + ch * 0.66);
+        }
+
+        ctx.fillStyle = '#9CA3AF';
+        drawRoundRect(ctx, ex + ew * 0.08, ey + eh * 0.61, ew * 0.84, 3, 1);
+        ctx.fill();
+
+        const capX = w * 0.41, capY = h * 0.47;
+        ctx.fillStyle = '#111315';
+        ctx.strokeStyle = '#9CA3AF';
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.ellipse(capX, capY, w * 0.015, h * 0.011, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#D97706';
+        ctx.beginPath();
+        ctx.arc(capX, capY, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+
+      // 14. VÝFUKOVÉ SVODY A LAMBDA SONDA
+      {
+        const part = getPartById('exhaust_lambda');
+        ctx.save();
+        ctx.translate(vibX, vibY);
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const mx = w * 0.40, my = h * 0.605, mw = w * 0.17, mh = h * 0.048;
+
+        ctx.fillStyle = state.exhaustHeat > 0.15
+          ? `rgb(${Math.round(90 + state.exhaustHeat * 145)}, ${Math.round(45 + state.exhaustHeat * 15)}, 35)`
+          : '#4A3B32';
+        for (let r = 0; r < 4; r++) {
+          drawRoundRect(ctx, mx + mw * (0.08 + r * 0.22), my - 2, mw * 0.16, mh + 4, 3);
+          ctx.fill();
+        }
+
+        ctx.fillStyle = textures.castAluminum || '#9BA2AA';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#374151';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2 : 1.2;
+        drawRoundRect(ctx, mx + mw * 0.06, my + 2, mw * 0.88, mh * 0.72, 3);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#CBD5E1';
+        drawRoundRect(ctx, mx + mw * 0.46, my + mh * 0.48, w * 0.013, h * 0.024, 2);
+        ctx.fill();
+        ctx.strokeStyle = '#181A1D';
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(mx + mw * 0.52, my + mh * 0.72);
+        ctx.quadraticCurveTo(mx + mw * 0.72, my + mh * 1.1, mx + mw * 0.86, my + mh * 0.45);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 10. MĚRKA HLADINY OLEJE
+      {
+        const part = getPartById('oil_system');
+        ctx.save();
+        ctx.translate(vibX, vibY);
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const dx = w * 0.425, dy = h * 0.572;
+        ctx.strokeStyle = '#4B5563';
+        ctx.lineWidth = 2.8;
+        ctx.beginPath();
+        ctx.moveTo(dx, dy);
+        ctx.lineTo(dx + 4, dy + h * 0.044);
+        ctx.stroke();
+
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#FDE047' : '#EAB308';
+        ctx.lineWidth = 3.2;
+        ctx.beginPath();
+        ctx.arc(dx, dy - 4, w * 0.011, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 9. ZAPALOVACÍ MODUL A VYSOKONAPĚŤOVÉ KABELY
+      {
+        const part = getPartById('ignition');
+        ctx.save();
+        ctx.translate(vibX, vibY);
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const ix = w * 0.575, iy = h * 0.475;
+        ctx.fillStyle = textures.crinkleBlack || '#1E2125';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#4B5563';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2 : 1.2;
+        drawRoundRect(ctx, ix, iy, w * 0.044, h * 0.072, 4);
+        ctx.fill();
+        ctx.stroke();
+
+        const firingOrder = [0, 2, 3, 1];
+        for (let c = 0; c < 4; c++) {
+          const targetX = w * (0.405 + c * 0.044);
+          const targetY = h * 0.485;
+          const isFiring = isRunning && firingOrder[state.sparkStep] === c;
+
+          ctx.strokeStyle = isFiring
+            ? '#F59E0B'
+            : (state.activeSystemFilter === 'electric' ? '#C87D20' : '#262A30');
+          ctx.lineWidth = isFiring ? 2.6 : 2;
+          ctx.beginPath();
+          ctx.moveTo(ix + 3, iy + h * (0.012 + c * 0.015));
+          ctx.quadraticCurveTo(ix - w * 0.02, targetY - h * 0.03, targetX, targetY);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      // 5. VZDUCHOVÝ FILTR (AIRBOX)
+      {
+        const part = getPartById('airbox');
+        ctx.save();
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const ax = w * 0.65, ay = h * 0.515, aw = w * 0.13, ah = h * 0.125;
+        ctx.fillStyle = textures.crinkleBlack || '#1E2125';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#4B5563';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2.2 : 1.4;
+        drawRoundRect(ctx, ax, ay, aw, ah, 5);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.strokeStyle = '#374151';
+        ctx.lineWidth = 1.4;
+        for (let r = 1; r <= 3; r++) {
+          ctx.beginPath();
+          ctx.moveTo(ax + 7, ay + (ah / 4) * r);
+          ctx.lineTo(ax + aw - 7, ay + (ah / 4) * r);
+          ctx.stroke();
+        }
+        ctx.fillStyle = '#9CA3AF';
+        ctx.fillRect(ax - 2, ay + ah * 0.3, 4, 8);
+        ctx.fillRect(ax + aw - 2, ay + ah * 0.3, 4, 8);
+
+        ctx.strokeStyle = '#181A1D';
+        ctx.lineWidth = Math.max(8, w * 0.013);
+        ctx.beginPath();
+        ctx.moveTo(ax + aw * 0.25, ay + 4);
+        ctx.quadraticCurveTo(w * 0.65, h * 0.42, w * 0.61, h * 0.412);
+        ctx.stroke();
+
+        drawHoseClamp(ctx, ax + aw * 0.25, ay + 4, 0, 12);
+        drawHoseClamp(ctx, w * 0.612, h * 0.412, 1.57, 12);
+
+        if (state.activeSystemFilter === 'intake' || (isRunning && state.selectedPartId === 'airbox')) {
+          ctx.strokeStyle = '#3E7B56';
+          ctx.lineWidth = 2.2;
+          ctx.setLineDash([6, 9]);
+          ctx.lineDashOffset = -state.flowPhase * 32;
+          ctx.beginPath();
+          ctx.moveTo(ax + aw * 0.5, ay + ah);
+          ctx.lineTo(ax + aw * 0.32, ay + 4);
+          ctx.quadraticCurveTo(w * 0.65, h * 0.42, w * 0.61, h * 0.412);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+        ctx.restore();
+      }
+
+      // 7. AUTOBATERIE 12 V
+      {
+        const part = getPartById('battery');
+        ctx.save();
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const bx = w * 0.70, by = h * 0.38, bw = w * 0.125, bh = h * 0.105;
+        ctx.fillStyle = '#141619';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#4B5563';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2.2 : 1.4;
+        drawRoundRect(ctx, bx, by, bw, bh, 4);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#262A30';
+        drawRoundRect(ctx, bx + 6, by + 6, bw - 12, bh * 0.42, 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#B91C1C';
+        drawRoundRect(ctx, bx + bw * 0.14, by + bh * 0.55, w * 0.022, h * 0.025, 2);
+        ctx.fill();
+        ctx.fillStyle = '#F9FAFB';
+        ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('+', bx + bw * 0.14 + w * 0.011, by + bh * 0.55 + h * 0.019);
+
+        ctx.fillStyle = '#6B7280';
+        drawRoundRect(ctx, bx + bw * 0.68, by + bh * 0.55, w * 0.022, h * 0.025, 2);
+        ctx.fill();
+        ctx.strokeStyle = '#9CA3AF';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(bx + bw * 0.79, by + bh * 0.66);
+        ctx.lineTo(w * 0.84, by + bh * 0.66);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // 12. POJISTKOVÁ A RELÉOVÁ SKŘÍŇ
+      {
+        const part = getPartById('fuse_box');
+        ctx.save();
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const fx = w * 0.80, fy = h * 0.49, fw = w * 0.068, fh = h * 0.105;
+        ctx.fillStyle = textures.crinkleBlack || '#181A1D';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#4B5563';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2.2 : 1.3;
+        drawRoundRect(ctx, fx, fy, fw, fh, 4);
+        ctx.fill();
+        ctx.stroke();
+
+        const fuseColors = ['#DC2626', '#2563EB', '#EAB308', '#16A34A'];
+        for (let i = 0; i < 4; i++) {
+          ctx.fillStyle = fuseColors[i];
+          ctx.fillRect(fx + 7 + i * (fw - 16) * 0.26, fy + 10, 4, 9);
+        }
+        ctx.fillStyle = '#374151';
+        ctx.fillRect(fx + 8, fy + fh * 0.52, fw * 0.34, fh * 0.32);
+        ctx.fillRect(fx + fw * 0.52, fy + fh * 0.52, fw * 0.34, fh * 0.32);
+        ctx.restore();
+      }
+
+      // 13. NÁDRŽKA OSTŘIKOVAČŮ
+      {
+        const part = getPartById('washer_tank');
+        ctx.save();
+        if (isDimmed(part)) ctx.globalAlpha = 0.28;
+
+        const wx = w * 0.175, wy = h * 0.57, ww = w * 0.075, wh = h * 0.095;
+        ctx.fillStyle = 'rgba(229, 226, 217, 0.24)';
+        ctx.strokeStyle = isSelectedOrHovered(part) ? '#D97706' : '#6B7280';
+        ctx.lineWidth = isSelectedOrHovered(part) ? 2.2 : 1.3;
+        drawRoundRect(ctx, wx, wy, ww, wh, 5);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = 'rgba(37, 99, 235, 0.65)';
+        drawRoundRect(ctx, wx + 2, wy + wh * 0.36, ww - 4, wh * 0.60, 4);
+        ctx.fill();
+
+        ctx.fillStyle = '#2563EB';
+        ctx.beginPath();
+        ctx.ellipse(wx + ww * 0.45, wy + 2, w * 0.015, h * 0.008, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#93C5FD';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // --------------------------------------------------------------------------
+      // D) FRONT SLAM PANEL (CHLADICÍ STĚNA), ZÁMEK KAPOTY, SVĚTLOMETY A NÁRAZNÍK
+      // --------------------------------------------------------------------------
+      ctx.save();
+      ctx.fillStyle = '#22262B';
+      ctx.beginPath();
+      ctx.moveTo(w * 0.12, h * 0.72);
+      ctx.lineTo(w * 0.88, h * 0.72);
+      ctx.lineTo(w * 0.90, h * 0.768);
+      ctx.lineTo(w * 0.10, h * 0.768);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#3B4047';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.fillStyle = '#EAB308';
+      ctx.fillRect(w * 0.37, h * 0.732, w * 0.032, h * 0.022);
+      ctx.fillStyle = '#111315';
+      ctx.fillRect(w * 0.373, h * 0.735, w * 0.012, h * 0.016);
+
+      ctx.fillStyle = '#111315';
+      drawRoundRect(ctx, w * 0.476, h * 0.724, w * 0.048, h * 0.036, 2);
+      ctx.fill();
+      ctx.strokeStyle = '#9CA3AF';
+      ctx.lineWidth = 1.4;
+      ctx.strokeRect(w * 0.489, h * 0.732, w * 0.022, h * 0.02);
+
+      const bumperGrad = ctx.createLinearGradient(w * 0.5, h * 0.76, w * 0.5, h * 0.895);
+      bumperGrad.addColorStop(0, paint.light);
+      bumperGrad.addColorStop(0.45, paint.mid);
+      bumperGrad.addColorStop(1, paint.dark);
+      ctx.fillStyle = bumperGrad;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.09, h * 0.76);
+      ctx.lineTo(w * 0.91, h * 0.76);
+      ctx.quadraticCurveTo(w * 0.92, h * 0.86, w * 0.84, h * 0.89);
+      ctx.lineTo(w * 0.16, h * 0.89);
+      ctx.quadraticCurveTo(w * 0.08, h * 0.86, w * 0.09, h * 0.76);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = paint.highlight;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      ctx.fillStyle = '#111315';
+      ctx.strokeStyle = '#CBD5E1';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.31, h * 0.768);
+      ctx.lineTo(w * 0.69, h * 0.768);
+      ctx.lineTo(w * 0.65, h * 0.835);
+      ctx.lineTo(w * 0.35, h * 0.835);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.strokeStyle = '#2A2E33';
+      ctx.lineWidth = 1.5;
+      for (let gy = 0.783; gy <= 0.824; gy += 0.013) {
+        ctx.beginPath();
+        ctx.moveTo(w * 0.33, h * gy);
+        ctx.lineTo(w * 0.67, h * gy);
+        ctx.stroke();
+      }
+      ctx.fillStyle = '#1A1C1E';
+      ctx.strokeStyle = '#E5E7EB';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(w * 0.50, h * 0.795, w * 0.016, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#111315';
+      drawRoundRect(ctx, w * 0.29, h * 0.85, w * 0.42, h * 0.028, 3);
+      ctx.fill();
+
+      const drawHeadlight = (isLeft) => {
+        ctx.save();
+        ctx.beginPath();
+        if (isLeft) {
+          ctx.moveTo(w * 0.11, h * 0.752);
+          ctx.lineTo(w * 0.29, h * 0.768);
+          ctx.lineTo(w * 0.28, h * 0.825);
+          ctx.lineTo(w * 0.10, h * 0.802);
+        } else {
+          ctx.moveTo(w * 0.89, h * 0.752);
+          ctx.lineTo(w * 0.71, h * 0.768);
+          ctx.lineTo(w * 0.72, h * 0.825);
+          ctx.lineTo(w * 0.90, h * 0.802);
+        }
+        ctx.closePath();
+        ctx.fillStyle = '#1E2329';
+        ctx.fill();
+        ctx.strokeStyle = '#9CA3AF';
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+
+        ctx.fillStyle = '#D97706';
+        ctx.beginPath();
+        ctx.arc(isLeft ? w * 0.135 : w * 0.865, h * 0.785, w * 0.009, 0, Math.PI * 2);
+        ctx.fill();
+
+        const lx = isLeft ? w * 0.215 : w * 0.785;
+        const ly = h * 0.792;
+        const lightsOn = state.ignitionPos >= 1 || state.miniStates.relayActive;
+        ctx.fillStyle = lightsOn ? '#FEF3C7' : '#6B7280';
+        ctx.beginPath();
+        ctx.arc(lx, ly, w * 0.015, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#D1D5DB';
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+        ctx.restore();
+      };
+      drawHeadlight(true);
+      drawHeadlight(false);
+      ctx.restore();
+
+      // --------------------------------------------------------------------------
+      // E) TECHNICAL DRAWING POSITION MARKERS (01–14) & HOVER CROSSHAIR
+      // --------------------------------------------------------------------------
+      if (state.hoodProgress > 0.65 && state.showPins) {
+        ENGINE_PARTS.forEach((part) => {
+          const px = w * part.pin.x;
+          const py = h * part.pin.y;
+          const selected = state.selectedPartId === part.id && state.mode === 'explore';
+          const hovered = state.hoveredPartId === part.id;
+          const systemMatch = state.activeSystemFilter !== 'all' && state.activeSystemFilter === part.system;
+
+          if (state.activeSystemFilter !== 'all' && !systemMatch && !selected && !hovered) return;
+
+          ctx.save();
+          const boxW = Math.max(22, w * 0.025);
+          const boxH = Math.max(16, h * 0.028);
+
+          ctx.fillStyle = selected
+            ? '#D97706'
+            : (hovered ? '#F3F0E8' : 'rgba(20, 22, 24, 0.90)');
+          ctx.strokeStyle = selected || hovered ? '#1C1B18' : '#9CA3AF';
+          ctx.lineWidth = 1.2;
+          ctx.fillRect(px - boxW * 0.5, py - boxH * 0.5, boxW, boxH);
+          ctx.strokeRect(px - boxW * 0.5, py - boxH * 0.5, boxW, boxH);
+
+          ctx.fillStyle = selected || hovered ? '#1C1B18' : '#F3F4F6';
+          ctx.font = `bold ${Math.max(9, Math.round(boxH * 0.62))}px "IBM Plex Mono", monospace`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(state.mode === 'quiz' ? '??' : part.code, px, py + 0.5);
+          ctx.restore();
+        });
+      }
+
+      // Technical blueprint crosshair & leader callout on Hover
+      if (state.hoodProgress > 0.65 && state.hoveredPartId) {
+        const hp = getPartById(state.hoveredPartId);
+        const hx = w * hp.pin.x;
+        const hy = h * hp.pin.y - 16;
+
+        ctx.save();
+        const b = hp.hitBox;
+        const bx = w * b.x, by = h * b.y, bw = w * b.w, bh = h * b.h;
+        const cl = 8;
+        ctx.strokeStyle = '#F59E0B';
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(bx, by + cl); ctx.lineTo(bx, by); ctx.lineTo(bx + cl, by);
+        ctx.moveTo(bx + bw - cl, by); ctx.lineTo(bx + bw, by); ctx.lineTo(bx + bw, by + cl);
+        ctx.moveTo(bx, by + bh - cl); ctx.lineTo(bx, by + bh); ctx.lineTo(bx + cl, by + bh);
+        ctx.moveTo(bx + bw - cl, by + bh); ctx.lineTo(bx + bw, by + bh); ctx.lineTo(bx + bw, by + bh - cl);
+        ctx.stroke();
+
+        const label = state.mode === 'quiz'
+          ? `URČIT TENTO DÍL`
+          : `[${hp.code}] ${hp.shortName.toUpperCase()}`;
+        ctx.font = `bold ${Math.max(10, Math.round(w * 0.0115))}px "IBM Plex Mono", monospace`;
+        const textW = ctx.measureText(label).width + 14;
+        const tagX = Math.min(Math.max(8, hx - textW * 0.5), w - textW - 8);
+        const tagY = Math.max(8, hy - 22);
+
+        ctx.fillStyle = '#F3F0E8';
+        ctx.strokeStyle = '#1C1B18';
+        ctx.lineWidth = 1.4;
+        ctx.fillRect(tagX, tagY, textW, 20);
+        ctx.strokeRect(tagX, tagY, textW, 20);
+
+        ctx.fillStyle = '#1C1B18';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, tagX + textW * 0.5, tagY + 10);
+        ctx.restore();
+      }
+
+      // --------------------------------------------------------------------------
+      // F) RAISED CAR HOOD WITH FELT INSULATION, PROP ROD & CAST SHADOW
+      // --------------------------------------------------------------------------
+      drawAnimatedHood(ctx, w, h, state.hoodProgress, paint);
+    }
+
+    function drawAnimatedHood(ctx, w, h, p, paint) {
+      const hingeY = h * 0.335;
+      const frontY = h * (0.755 - p * 0.715);
+      const rearLeftX = w * 0.145;
+      const rearRightX = w * 0.855;
+      const frontInset = 0.105 + p * 0.075;
+      const frontLeftX = w * frontInset;
+      const frontRightX = w * (1 - frontInset);
+
+      ctx.save();
+
+      // Cast shadow across engine bay as hood closes (p < 0.92)
+      if (p < 0.92) {
+        const shadowAlpha = (1 - p) * 0.62;
+        ctx.fillStyle = `rgba(0, 0, 0, ${shadowAlpha})`;
+        ctx.beginPath();
+        ctx.moveTo(rearLeftX, hingeY);
+        ctx.lineTo(rearRightX, hingeY);
+        ctx.lineTo(frontRightX, Math.min(h * 0.76, frontY + h * 0.06));
+        ctx.lineTo(frontLeftX, Math.min(h * 0.76, frontY + h * 0.06));
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      // Gooseneck Steel Hood Hinges at cowl corners
+      ctx.strokeStyle = '#6B7280';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.moveTo(rearLeftX + 12, hingeY + 4);
+      ctx.lineTo(rearLeftX + 18, hingeY - 10 * p);
+      ctx.moveTo(rearRightX - 12, hingeY + 4);
+      ctx.lineTo(rearRightX - 18, hingeY - 10 * p);
+      ctx.stroke();
+
+      // Steel Hood Prop Rod (Vzpěra kapoty) on left side
+      if (p > 0.25) {
+        const rodAlpha = Math.min(1, (p - 0.25) / 0.35);
+        ctx.save();
+        ctx.globalAlpha = rodAlpha;
+        const baseX = w * 0.145, baseY = h * 0.725;
+        const tipX = frontLeftX + (frontRightX - frontLeftX) * 0.075;
+        const tipY = frontY + (hingeY - frontY) * 0.18;
+
+        ctx.strokeStyle = '#CBD5E1';
+        ctx.lineWidth = Math.max(3, w * 0.0038);
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(baseX, baseY);
+        ctx.lineTo(tipX, tipY);
+        ctx.stroke();
+
+        ctx.fillStyle = '#EAB308';
+        ctx.beginPath();
+        ctx.arc(tipX, tipY, 3.8, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      // Hood Panel Polygon
+      ctx.beginPath();
+      ctx.moveTo(rearLeftX, hingeY);
+      ctx.lineTo(rearRightX, hingeY);
+      ctx.lineTo(frontRightX, frontY);
+      ctx.quadraticCurveTo(w * 0.5, frontY - h * 0.015 * (1 - p), frontLeftX, frontY);
+      ctx.closePath();
+
+      if (p > 0.42) {
+        // UNDERSIDE OF RAISED HOOD
+        ctx.fillStyle = paint.dark;
+        ctx.fill();
+        ctx.strokeStyle = paint.mid;
+        ctx.lineWidth = 2.4;
+        ctx.stroke();
+
+        // Acoustic felt insulation mat (Tlumicí plstěná izolace)
+        ctx.fillStyle = textures.feltInsulation || '#23221F';
+        ctx.beginPath();
+        ctx.moveTo(rearLeftX + w * 0.055, hingeY - h * 0.02);
+        ctx.lineTo(rearRightX - w * 0.055, hingeY - h * 0.02);
+        ctx.lineTo(frontRightX - w * 0.045, frontY + h * 0.028);
+        ctx.lineTo(frontLeftX + w * 0.045, frontY + h * 0.028);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#3F3E39';
+        ctx.lineWidth = 1.4;
+        ctx.stroke();
+
+        ctx.fillStyle = '#111315';
+        const clipCoords = [
+          [0.32, 0.25], [0.50, 0.25], [0.68, 0.25],
+          [0.35, 0.14], [0.50, 0.14], [0.65, 0.14]
+        ];
+        clipCoords.forEach(([cx, cy]) => {
+          const realY = frontY + (hingeY - frontY) * (1 - cy * 3.2);
+          if (realY > frontY + 8 && realY < hingeY - 8) {
+            ctx.beginPath();
+            ctx.arc(w * cx, realY, 2.5, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        });
+
+        ctx.strokeStyle = '#E5E7EB';
+        ctx.lineWidth = 2.2;
+        ctx.strokeRect(w * 0.489, frontY + 4, w * 0.022, h * 0.017);
+      } else {
+        // CLOSED EXTERIOR PAINTED HOOD
+        const hoodGrad = ctx.createLinearGradient(w * 0.5, hingeY, w * 0.5, frontY);
+        hoodGrad.addColorStop(0, paint.mid);
+        hoodGrad.addColorStop(0.55, paint.light);
+        hoodGrad.addColorStop(1, paint.dark);
+        ctx.fillStyle = hoodGrad;
+        ctx.fill();
+        ctx.strokeStyle = paint.highlight;
+        ctx.lineWidth = 1.8;
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(w * 0.26, hingeY + 8);
+        ctx.lineTo(w * 0.31, frontY - 8);
+        ctx.moveTo(w * 0.74, hingeY + 8);
+        ctx.lineTo(w * 0.69, frontY - 8);
+        ctx.stroke();
+
+        ctx.fillStyle = '#F3F0E8';
+        ctx.strokeStyle = '#1C1B18';
+        ctx.lineWidth = 1.5;
+        ctx.fillRect(w * 0.33, h * 0.50, w * 0.34, h * 0.08);
+        ctx.strokeRect(w * 0.33, h * 0.50, w * 0.34, h * 0.08);
+
+        ctx.fillStyle = '#1C1B18';
+        ctx.font = `bold ${Math.max(11, Math.round(w * 0.014))}px "Oswald", sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('KAPOTA ZAJIŠTĚNA V ZÁMKU — KLIKNĚTE PRO OTEVŘENÍ', w * 0.5, h * 0.54);
+      }
+
+      ctx.restore();
+    }
+
+    // ----------------------------------------------------------------------------
+    // 10. TECHNICKÉ ŘEZY NA KRESLICÍM PAPÍRU V PRAVÉM PANELU (14 ANIMACÍ)
+    // ----------------------------------------------------------------------------
+    function drawInspectorAnimation(ctx, w, h) {
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.fillStyle = '#ECE7DA';
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.strokeStyle = 'rgba(28, 27, 24, 0.07)';
+      ctx.lineWidth = 1;
+      for (let gx = 0; gx < w; gx += 20) {
+        ctx.beginPath();
+        ctx.moveTo(gx, 0);
+        ctx.lineTo(gx, h);
+        ctx.stroke();
+      }
+      for (let gy = 0; gy < h; gy += 20) {
+        ctx.beginPath();
+        ctx.moveTo(0, gy);
+        ctx.lineTo(w, gy);
+        ctx.stroke();
+      }
+
+      const id = state.selectedPartId;
+      switch (id) {
+        case 'engine_block': animEngineBlock(ctx, w, h); break;
+        case 'radiator': animRadiator(ctx, w, h); break;
+        case 'expansion_tank': animExpansionTank(ctx, w, h); break;
+        case 'thermostat': animThermostat(ctx, w, h); break;
+        case 'airbox': animAirbox(ctx, w, h); break;
+        case 'throttle_body': animThrottleBody(ctx, w, h); break;
+        case 'battery': animBattery(ctx, w, h); break;
+        case 'alternator': animAlternator(ctx, w, h); break;
+        case 'ignition': animIgnition(ctx, w, h); break;
+        case 'oil_system': animOilSystem(ctx, w, h); break;
+        case 'brake_booster': animBrakeBooster(ctx, w, h); break;
+        case 'fuse_box': animFuseBox(ctx, w, h); break;
+        case 'washer_tank': animWasherTank(ctx, w, h); break;
+        case 'exhaust_lambda': animExhaustLambda(ctx, w, h); break;
+      }
+    }
+
+    // 01. 4-Cylinder Cutaway (1-3-4-2 firing order, valves, spark, connecting rods)
+    function animEngineBlock(ctx, w, h) {
+      const isRunning = state.ignitionPos === 2 && state.rpm > 120;
+      const crankY = h * 0.77;
+      const cylTopY = h * 0.18;
+      const cylH = h * 0.42;
+      const cylW = Math.min(44, w * 0.14);
+      const startX = w * 0.5 - cylW * 2.35;
+      const spacing = cylW * 1.38;
+      const phaseOffsets = [0, Math.PI * 6, Math.PI * 2, Math.PI * 4];
+      const strokeLabels = ['SÁNÍ', 'KOMPR.', 'EXPANZE', 'VÝFUK'];
+
+      for (let i = 0; i < 4; i++) {
+        const cx = startX + i * spacing + cylW * 0.5;
+        const cycleAng = (state.crankAngle + phaseOffsets[i]) % (Math.PI * 8);
+        const pistonNorm = (1 - Math.cos(cycleAng)) * 0.5;
+        const strokeIdx = Math.floor(cycleAng / (Math.PI * 2));
+
+        ctx.fillStyle = '#DFD9CA';
+        ctx.strokeStyle = '#1C1B18';
+        ctx.lineWidth = 1.6;
+        ctx.fillRect(cx - cylW * 0.5, cylTopY, cylW, cylH);
+        ctx.strokeRect(cx - cylW * 0.5, cylTopY, cylW, cylH);
+
+        const pistonY = cylTopY + 12 + pistonNorm * (cylH - 34);
+        const chamberH = pistonY - cylTopY;
+
+        if (strokeIdx === 0) ctx.fillStyle = 'rgba(30, 58, 95, 0.22)';
+        else if (strokeIdx === 1) ctx.fillStyle = `rgba(180, 83, 9, ${0.15 + (1 - pistonNorm) * 0.35})`;
+        else if (strokeIdx === 2) ctx.fillStyle = `rgba(185, 28, 28, ${0.72 - pistonNorm * 0.48})`;
+        else ctx.fillStyle = 'rgba(100, 95, 84, 0.25)';
+        ctx.fillRect(cx - cylW * 0.46, cylTopY + 1, cylW * 0.92, Math.max(2, chamberH - 1));
+
+        const inOpen = strokeIdx === 0 ? Math.sin((cycleAng % (Math.PI * 2)) * 0.5) * 5.5 : 0;
+        const exOpen = strokeIdx === 3 ? Math.sin((cycleAng % (Math.PI * 2)) * 0.5) * 5.5 : 0;
+
+        ctx.strokeStyle = '#1E3A5F';
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(cx - cylW * 0.22, cylTopY - 8 + inOpen);
+        ctx.lineTo(cx - cylW * 0.22, cylTopY + 2 + inOpen);
+        ctx.moveTo(cx - cylW * 0.34, cylTopY + 2 + inOpen);
+        ctx.lineTo(cx - cylW * 0.10, cylTopY + 2 + inOpen);
+        ctx.stroke();
+
+        ctx.strokeStyle = '#9A3412';
+        ctx.beginPath();
+        ctx.moveTo(cx + cylW * 0.22, cylTopY - 8 + exOpen);
+        ctx.lineTo(cx + cylW * 0.22, cylTopY + 2 + exOpen);
+        ctx.moveTo(cx + cylW * 0.10, cylTopY + 2 + exOpen);
+        ctx.lineTo(cx + cylW * 0.34, cylTopY + 2 + exOpen);
+        ctx.stroke();
+
+        if (strokeIdx === 2 && (cycleAng % (Math.PI * 2)) < 0.75 && isRunning) {
+          ctx.fillStyle = '#D97706';
+          ctx.beginPath();
+          ctx.arc(cx, cylTopY + 5, 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        const crankR = 14;
+        const pinX = cx + Math.sin(cycleAng) * crankR;
+        const pinY = crankY - Math.cos(cycleAng) * crankR;
+
+        ctx.strokeStyle = '#3B3831';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(cx, pistonY + 11);
+        ctx.lineTo(pinX, pinY);
+        ctx.stroke();
+
+        ctx.fillStyle = '#9CA3AF';
+        ctx.strokeStyle = '#1C1B18';
+        ctx.lineWidth = 1.2;
+        ctx.fillRect(cx - cylW * 0.44, pistonY, cylW * 0.88, 18);
+        ctx.strokeRect(cx - cylW * 0.44, pistonY, cylW * 0.88, 18);
+
+        ctx.fillStyle = '#9A3412';
+        ctx.beginPath();
+        ctx.arc(pinX, pinY, 3.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#1C1B18';
+        ctx.font = 'bold 9px "IBM Plex Mono", monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(`V${i + 1}: ${strokeLabels[strokeIdx]}`, cx, h - 8);
+      }
+    }
+
+    // 02. Radiator thermal cross-section
+    function animRadiator(ctx, w, h) {
+      const isRunning = state.ignitionPos === 2 && state.rpm > 120;
+      const rx = w * 0.22, ry = h * 0.20, rw = w * 0.54, rh = h * 0.60;
+
+      ctx.fillStyle = '#DFD9CA';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 1.6;
+      ctx.fillRect(rx, ry, rw, rh);
+      ctx.strokeRect(rx, ry, rw, rh);
+
+      const tubeColors = ['#B91C1C', '#C2410C', '#B45309', '#0369A1', '#1E3A5F'];
+      for (let t = 0; t < 5; t++) {
+        const ty = ry + 14 + t * ((rh - 28) / 4);
+        ctx.strokeStyle = tubeColors[t];
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(rx + 8, ty);
+        ctx.lineTo(rx + rw - 8, ty);
+        ctx.stroke();
+
+        if (isRunning) {
+          ctx.strokeStyle = '#FAF8F3';
+          ctx.lineWidth = 1.6;
+          ctx.setLineDash([5, 12]);
+          ctx.lineDashOffset = -state.flowPhase * 28 * (t % 2 === 0 ? 1 : -1);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+      }
+
+      ctx.strokeStyle = '#1E3A5F';
+      ctx.lineWidth = 1.8;
+      for (let a = 0; a < 3; a++) {
+        const ay = ry + 22 + a * 34;
+        const off = (state.flowPhase * 26) % 22;
+        ctx.beginPath();
+        ctx.moveTo(rx - 36 + off, ay);
+        ctx.lineTo(rx - 10 + off, ay);
+        ctx.lineTo(rx - 16 + off, ay - 4);
+        ctx.stroke();
+      }
+
+      ctx.save();
+      ctx.translate(rx + rw + 24, ry + rh * 0.5);
+      ctx.rotate(state.fanAngle);
+      ctx.fillStyle = state.coolantTemp >= 92 ? '#9A3412' : '#4A473F';
+      for (let b = 0; b < 6; b++) {
+        ctx.rotate(Math.PI / 3);
+        ctx.beginPath();
+        ctx.ellipse(0, -16, 4, 14, 0.25, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+
+      ctx.fillStyle = '#9A3412';
+      ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText('VSTUP HORKÉ KAPALINY (92 °C)', rx, ry - 6);
+      ctx.fillStyle = '#1E3A5F';
+      ctx.fillText('VÝSTUP OCHLAZENÉ KAPALINY (78 °C)', rx, ry + rh + 14);
+    }
+
+    // 03. Expansion tank thermal expansion & pressure valve
+    function animExpansionTank(ctx, w, h) {
+      const cx = w * 0.42, cy = h * 0.53, r = 54;
+      const exp = Math.min(1, Math.max(0, (state.coolantTemp - 20) / 72));
+
+      ctx.fillStyle = '#DFD9CA';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(cx, cy, r - 2, 0, Math.PI * 2);
+      ctx.clip();
+      const topY = cy + 16 - exp * 24;
+      ctx.fillStyle = 'rgba(190, 49, 68, 0.72)';
+      ctx.fillRect(cx - r, topY, r * 2, r * 2);
+      ctx.restore();
+
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(cx - r - 8, cy - 10); ctx.lineTo(cx - r + 10, cy - 10);
+      ctx.moveTo(cx - r - 8, cy + 16); ctx.lineTo(cx - r + 10, cy + 16);
+      ctx.stroke();
+
+      ctx.fillStyle = '#1C1B18';
+      ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'right';
+      ctx.fillText('MAX', cx - r - 11, cy - 7);
+      ctx.fillText('MIN', cx - r - 11, cy + 19);
+
+      ctx.fillStyle = '#1D4ED8';
+      ctx.fillRect(cx - 16, cy - r - 12, 32, 13);
+      ctx.strokeRect(cx - 16, cy - r - 12, 32, 13);
+
+      const bar = (1.0 + exp * 0.45).toFixed(2);
+      ctx.fillStyle = '#1C1B18';
+      ctx.textAlign = 'left';
+      ctx.fillText(`PŘETLAK: ${bar} BAR`, cx + r + 14, cy - 8);
+      ctx.fillStyle = '#4A473F';
+      ctx.font = '10px "IBM Plex Sans", sans-serif';
+      ctx.fillText(exp > 0.6 ? 'Objem zvětšen tepelnou roztažností' : 'Studená hladina mezi MIN a MAX', cx + r + 14, cy + 10);
+    }
+
+    // 04. Wax thermostat opening at 88°C
+    function animThermostat(ctx, w, h) {
+      const openRatio = Math.min(1, Math.max(0, (state.coolantTemp - 82) / 10));
+      const cx = w * 0.40, cy = h * 0.52;
+
+      ctx.fillStyle = '#DFD9CA';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 1.6;
+      ctx.fillRect(cx - 75, cy - 26, 150, 52);
+      ctx.strokeRect(cx - 75, cy - 26, 150, 52);
+
+      ctx.fillStyle = '#B45309';
+      ctx.fillRect(cx - 42, cy - 10, 30, 20);
+      ctx.strokeRect(cx - 42, cy - 10, 30, 20);
+
+      const valveX = cx - 4 - openRatio * 14;
+      ctx.fillStyle = '#1C1B18';
+      ctx.fillRect(valveX, cy - 23, 5, 46);
+
+      if (openRatio > 0.2) {
+        ctx.strokeStyle = '#B91C1C';
+        ctx.lineWidth = 2.4;
+        ctx.beginPath();
+        ctx.moveTo(cx - 18, cy - 15);
+        ctx.lineTo(cx + 65, cy - 15);
+        ctx.lineTo(cx + 55, cy - 20);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = openRatio > 0.3 ? '#9A3412' : '#1E3A5F';
+      ctx.font = 'bold 11px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText(openRatio > 0.3 ? 'OTEVŘENO (VELKÝ OKRUH)' : 'ZAVŘENO (MALÝ OKRUH)', cx + 88, cy - 6);
+      ctx.fillStyle = '#3B3831';
+      ctx.font = '10px "IBM Plex Mono", monospace';
+      ctx.fillText(`T = ${Math.round(state.coolantTemp)} °C (PRÁH 88 °C)`, cx + 88, cy + 12);
+    }
+
+    // 05. Pleated air filter element
+    function animAirbox(ctx, w, h) {
+      const clean = state.miniStates.airboxClean;
+      const fx = w * 0.48, fy = h * 0.20, fh = h * 0.58;
+
+      ctx.strokeStyle = clean ? '#B45309' : '#44403C';
+      ctx.lineWidth = 2.8;
+      ctx.beginPath();
+      for (let y = fy; y <= fy + fh; y += 11) {
+        const zig = ((y - fy) / 11) % 2 === 0 ? -9 : 9;
+        if (y === fy) ctx.moveTo(fx + zig, y);
+        else ctx.lineTo(fx + zig, y);
+      }
+      ctx.stroke();
+
+      for (let p = 0; p < 9; p++) {
+        const t = ((state.flowPhase * 0.85 + p * 0.11) % 1);
+        const px = w * 0.14 + t * (fx - w * 0.14 - 12);
+        const py = fy + 10 + ((p * 29) % (fh - 20));
+        ctx.fillStyle = '#57534E';
+        ctx.beginPath();
+        ctx.arc(px, py, 2.3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (!clean) {
+        ctx.fillStyle = '#292524';
+        for (let d = 0; d < 12; d++) {
+          ctx.beginPath();
+          ctx.arc(fx - 10, fy + 8 + d * 9.5, 2.8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      const speed = clean ? 1.15 : 0.4;
+      for (let c = 0; c < 8; c++) {
+        const t = ((state.flowPhase * speed + c * 0.125) % 1);
+        const cx = fx + 14 + t * (w * 0.86 - fx - 14);
+        const cy = fy + 12 + ((c * 31) % (fh - 24));
+        ctx.fillStyle = '#1E3A5F';
+        ctx.beginPath();
+        ctx.arc(cx, cy, 2.3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.fillStyle = '#1C1B18';
+      ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(clean ? 'STAV: NOVÁ FILTRAČNÍ VLOŽKA (0,6 kPa)' : 'STAV: ZANESENÁ VLOŽKA (3,8 kPa)', w * 0.5, h - 10);
+    }
+
+    // 06. Throttle body butterfly plate
+    function animThrottleBody(ctx, w, h) {
+      const isRunning = state.ignitionPos === 2 && state.rpm > 120;
+      const cx = w * 0.5, cy = h * 0.50, r = 50;
+      const ratio = isRunning ? Math.min(1, Math.max(0.05, (state.rpm - 850) / 5150)) : 0.04;
+      const angle = (Math.PI * 0.46) * (1 - ratio);
+
+      ctx.fillStyle = '#DFD9CA';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      if (isRunning) {
+        ctx.strokeStyle = '#1E3A5F';
+        ctx.lineWidth = 1.8;
+        for (let a = -1; a <= 1; a++) {
+          const off = (state.flowPhase * (25 + ratio * 75)) % 36;
+          ctx.beginPath();
+          ctx.moveTo(cx - 105 + off, cy + a * 18);
+          ctx.lineTo(cx - 65 + off, cy + a * 18);
+          ctx.stroke();
+        }
+      }
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(angle);
+      ctx.fillStyle = '#B45309';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 1.2;
+      ctx.fillRect(-r + 4, -3, (r - 4) * 2, 6);
+      ctx.strokeRect(-r + 4, -3, (r - 4) * 2, 6);
+      ctx.fillStyle = '#1C1B18';
+      ctx.beginPath();
+      ctx.arc(0, 0, 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = '#1C1B18';
+      ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(`OTEVŘENÍ KLAPKY: ${Math.round(ratio * 100)} % (${Math.round(4 + ratio * 82)}°)`, w * 0.5, h - 10);
+    }
+
+    // 07. 12V Battery cells
+    function animBattery(ctx, w, h) {
+      const isRunning = state.ignitionPos === 2 && state.crankingTimer <= 0;
+      const bx = w * 0.30, by = h * 0.22, bw = w * 0.40, bh = h * 0.56;
+      ctx.fillStyle = '#DFD9CA';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 1.8;
+      ctx.fillRect(bx, by, bw, bh);
+      ctx.strokeRect(bx, by, bw, bh);
+
+      for (let i = 0; i < 6; i++) {
+        const px = bx + 11 + i * ((bw - 22) / 6);
+        ctx.fillStyle = i % 2 === 0 ? '#9A3412' : '#1E3A5F';
+        ctx.fillRect(px, by + 14, 8, bh - 26);
+      }
+
+      ctx.fillStyle = '#1C1B18';
+      ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(
+        isRunning
+          ? `DOBÍJENÍ ALTERNÁTOREM: ${state.batteryVoltage.toFixed(1)} V`
+          : `KLIDOVÉ / ZÁTĚŽOVÉ NAPĚTÍ: ${state.batteryVoltage.toFixed(1)} V`,
+        w * 0.5,
+        h - 10
+      );
+    }
+
+    // 08. Alternator rotor & rectified wave
+    function animAlternator(ctx, w, h) {
+      const isRunning = state.ignitionPos === 2 && state.rpm > 120;
+      const cx = w * 0.28, cy = h * 0.48, r = 44;
+
+      ctx.strokeStyle = '#B45309';
+      ctx.lineWidth = 7;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(state.beltOffset * 0.18);
+      ctx.fillStyle = '#1E3A5F';
+      ctx.fillRect(-9, -r + 8, 18, (r - 8) * 2);
+      ctx.fillStyle = '#9A3412';
+      ctx.fillRect(-r + 8, -9, (r - 8) * 2, 18);
+      ctx.restore();
+
+      const gx = w * 0.52, gy = h * 0.52, gw = w * 0.40;
+      ctx.strokeStyle = '#1E3A5F';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      for (let x = 0; x <= gw; x += 4) {
+        const amp = isRunning ? Math.abs(Math.sin(x * 0.12 - state.beltOffset * 0.3)) * 12 : 0;
+        const y = gy - (isRunning ? 20 + amp : 0);
+        if (x === 0) ctx.moveTo(gx + x, y);
+        else ctx.lineTo(gx + x, y);
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = '#1C1B18';
+      ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText(isRunning ? 'USMĚRNĚNÝ PROUD: 14,2 V DC' : '0,0 V (ROTOR V KLIDU)', gx, gy + 24);
+    }
+
+    // 09. Ignition coil & spark plugs
+    function animIgnition(ctx, w, h) {
+      const isRunning = state.ignitionPos === 2 && state.rpm > 120;
+      const firingOrder = [0, 2, 3, 1];
+      const activeCyl = firingOrder[state.sparkStep];
+
+      ctx.fillStyle = '#DFD9CA';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 1.6;
+      ctx.fillRect(w * 0.08, h * 0.30, 62, 70);
+      ctx.strokeRect(w * 0.08, h * 0.30, 62, 70);
+      ctx.fillStyle = '#1C1B18';
+      ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText('12V→30kV', w * 0.08 + 31, h * 0.30 + 38);
+
+      for (let i = 0; i < 4; i++) {
+        const px = w * (0.42 + i * 0.14);
+        const py = h * 0.44;
+        const firing = isRunning && activeCyl === i;
+
+        ctx.strokeStyle = firing ? '#9A3412' : '#4A473F';
+        ctx.lineWidth = firing ? 2.4 : 1.4;
+        ctx.beginPath();
+        ctx.moveTo(w * 0.08 + 62, h * 0.35 + i * 14);
+        ctx.lineTo(px, py - 22);
+        ctx.stroke();
+
+        ctx.fillStyle = '#FAF8F3';
+        ctx.strokeStyle = '#1C1B18';
+        ctx.fillRect(px - 6, py - 22, 12, 32);
+        ctx.strokeRect(px - 6, py - 22, 12, 32);
+
+        if (firing) {
+          ctx.fillStyle = '#D97706';
+          ctx.beginPath();
+          ctx.arc(px, py + 17, 7, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.fillStyle = '#1C1B18';
+        ctx.fillText(`SV.${i + 1}`, px, py + 40);
+      }
+    }
+
+    // 10. Oil dipstick inspection
+    function animOilSystem(ctx, w, h) {
+      const target = state.miniStates.dipstickPulled ? 1 : 0;
+      state.miniStates.dipstickProgress += (target - state.miniStates.dipstickProgress) * 0.14;
+      const p = state.miniStates.dipstickProgress;
+
+      ctx.fillStyle = 'rgba(180, 83, 9, 0.45)';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.fillRect(w * 0.22, h * 0.68, w * 0.46, h * 0.20);
+      ctx.strokeRect(w * 0.22, h * 0.68, w * 0.46, h * 0.20);
+
+      const stickX = w * 0.36;
+      const tipY = h * 0.82 - p * (h * 0.34);
+
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.moveTo(stickX, tipY - 82);
+      ctx.lineTo(stickX, tipY);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#CA8A04';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(stickX, tipY - 90, 8, 0, Math.PI * 2);
+      ctx.stroke();
+
+      const zx = w * 0.68, zy = h * 0.46;
+      ctx.fillStyle = '#FAF8F3';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 1.5;
+      ctx.fillRect(zx - 52, zy - 48, 104, 96);
+      ctx.strokeRect(zx - 52, zy - 48, 104, 96);
+
+      ctx.fillStyle = '#9CA3AF';
+      ctx.fillRect(zx - 8, zy - 34, 16, 68);
+      ctx.fillStyle = '#B45309';
+      ctx.fillRect(zx - 8, zy - 4, 16, 38);
+
+      ctx.fillStyle = '#1C1B18';
+      ctx.font = 'bold 9px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText('MAX', zx + 13, zy - 14);
+      ctx.fillText('MIN', zx + 13, zy + 24);
+      ctx.fillText('HLADINA OK', zx - 30, zy + 43);
+    }
+
+    // 11. Vacuum brake booster
+    function animBrakeBooster(ctx, w, h) {
+      const target = state.miniStates.brakePressed ? 1 : 0;
+      state.miniStates.brakeProgress += (target - state.miniStates.brakeProgress) * 0.16;
+      const p = state.miniStates.brakeProgress;
+
+      const dx = w * 0.44, dy = h * 0.46;
+      ctx.fillStyle = '#DFD9CA';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 1.8;
+      ctx.fillRect(dx - 36, dy - 44, 72, 88);
+      ctx.strokeRect(dx - 36, dy - 44, 72, 88);
+
+      const shift = p * 18;
+      ctx.strokeStyle = '#9A3412';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      ctx.moveTo(dx - 8 + shift, dy - 40);
+      ctx.lineTo(dx - 8 + shift, dy + 40);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 4.5;
+      ctx.beginPath();
+      ctx.moveTo(dx - 80 + shift, dy);
+      ctx.lineTo(dx - 8 + shift, dy);
+      ctx.stroke();
+
+      ctx.fillStyle = '#9CA3AF';
+      ctx.fillRect(dx + 36, dy - 15, 52, 30);
+      ctx.strokeRect(dx + 36, dy - 15, 52, 30);
+
+      ctx.fillStyle = '#1C1B18';
+      ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(`HYDRAULICKÝ TLAK V OKRUHU: ${Math.round(p * 88)} BAR`, w * 0.5, h - 10);
+    }
+
+    // 12. Electromagnetic relay & fuse
+    function animFuseBox(ctx, w, h) {
+      const active = state.miniStates.relayActive;
+      const cx = w * 0.48, cy = h * 0.46;
+
+      ctx.fillStyle = '#DFD9CA';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 1.8;
+      ctx.fillRect(cx - 72, cy - 44, 144, 88);
+      ctx.strokeRect(cx - 72, cy - 44, 144, 88);
+
+      ctx.fillStyle = active ? '#B45309' : '#78350F';
+      ctx.fillRect(cx - 50, cy - 14, 32, 36);
+      ctx.strokeRect(cx - 50, cy - 14, 32, 36);
+
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(cx + 12, cy + 20);
+      ctx.lineTo(active ? cx + 30 : cx + 44, cy - 20);
+      ctx.stroke();
+
+      ctx.fillStyle = active ? '#15803D' : '#B91C1C';
+      ctx.beginPath();
+      ctx.arc(cx + 30, cy - 20, 4.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#1C1B18';
+      ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(active ? 'KONTAKTY SEPNUTY (SVORKA 30 → 87)' : 'KLIDOVÝ STAV (OBVOD ROZPOJEN)', w * 0.5, h - 10);
+    }
+
+    // 13. Windshield washer pump
+    function animWasherTank(ctx, w, h) {
+      if (state.miniStates.washerSpraying) {
+        state.miniStates.washerTimer -= 0.016;
+        if (state.miniStates.washerTimer <= 0) state.miniStates.washerSpraying = false;
+      }
+      const spraying = state.miniStates.washerSpraying;
+
+      ctx.fillStyle = 'rgba(37, 99, 235, 0.35)';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 1.6;
+      ctx.fillRect(w * 0.16, h * 0.28, 64, 88);
+      ctx.strokeRect(w * 0.16, h * 0.28, 64, 88);
+
+      ctx.strokeStyle = '#1E3A5F';
+      ctx.lineWidth = 2.6;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.16 + 64, h * 0.62);
+      ctx.quadraticCurveTo(w * 0.44, h * 0.70, w * 0.56, h * 0.50);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 2.4;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.62, h * 0.22);
+      ctx.lineTo(w * 0.84, h * 0.62);
+      ctx.stroke();
+
+      if (spraying) {
+        ctx.fillStyle = '#1D4ED8';
+        for (let d = 0; d < 12; d++) {
+          const prog = ((state.flowPhase * 2 + d * 0.08) % 1);
+          const sx = w * 0.56 + prog * (w * 0.20);
+          const sy = h * 0.50 - prog * (h * 0.20) + (d % 3) * 5;
+          ctx.beginPath();
+          ctx.arc(sx, sy, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      ctx.fillStyle = '#1C1B18';
+      ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(spraying ? 'ČERPADLO V CHODU (TLAK 2,0 BAR)' : 'ČERPADLO V KLIDU', w * 0.5, h - 10);
+    }
+
+    // 14. Exhaust manifold & narrowband Lambda signal
+    function animExhaustLambda(ctx, w, h) {
+      const isRunning = state.ignitionPos === 2 && state.rpm > 120;
+      ctx.fillStyle = '#DFD9CA';
+      ctx.strokeStyle = '#1C1B18';
+      ctx.lineWidth = 1.6;
+      ctx.fillRect(w * 0.08, h * 0.34, w * 0.35, 44);
+      ctx.strokeRect(w * 0.08, h * 0.34, w * 0.35, 44);
+
+      if (isRunning) {
+        ctx.fillStyle = '#9A3412';
+        for (let p = 0; p < 5; p++) {
+          const px = w * 0.10 + ((state.flowPhase * 42 + p * 26) % (w * 0.31));
+          ctx.beginPath();
+          ctx.arc(px, h * 0.34 + 22, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      ctx.fillStyle = '#4B5563';
+      ctx.fillRect(w * 0.23, h * 0.18, 12, 24);
+      ctx.strokeRect(w * 0.23, h * 0.18, 12, 24);
+
+      const gx = w * 0.50, gy = h * 0.56, gw = w * 0.42;
+      ctx.strokeStyle = '#9A3412';
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      for (let x = 0; x <= gw; x += 4) {
+        const wave = isRunning ? Math.sin(x * 0.14 - state.flowPhase * 6) * 18 : 0;
+        const y = gy - 20 + wave;
+        if (x === 0) ctx.moveTo(gx + x, y);
+        else ctx.lineTo(gx + x, y);
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = '#1C1B18';
+      ctx.font = 'bold 10px "IBM Plex Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText(isRunning ? 'OSCILACE SONDY: 0,1 V ↔ 0,9 V' : 'ČEKÁ NA OHŘEV SONDY (350 °C)', gx, gy + 24);
+    }
+
+    // ----------------------------------------------------------------------------
+    // 11. HLAVNÍ SMYČKA FYZIKY MOTORU A VYKRESLOVÁNÍ
+    // ----------------------------------------------------------------------------
+    let lastTime = performance.now();
+
+    function simulationLoop(now) {
+      const dt = Math.min(0.05, (now - lastTime) / 1000);
+      lastTime = now;
+
+      // 1. Hood interpolation
+      state.hoodProgress += (state.hoodTarget - state.hoodProgress) * Math.min(1, dt * 6.5);
+
+      // 2. Ignition & Engine physics
+      const isRunning = state.ignitionPos === 2;
+      if (isRunning) {
+        if (state.crankingTimer > 0) {
+          state.crankingTimer -= dt;
+          state.rpm = 250;
+          state.batteryVoltage = 10.2;
+        } else {
+          state.rpm += (state.targetRpm - state.rpm) * Math.min(1, dt * 6);
+          state.batteryVoltage += (14.2 - state.batteryVoltage) * Math.min(1, dt * 4);
+        }
+
+        const warmRate = 1.1 + (state.rpm / 6000) * 2.6;
+        if (state.coolantTemp < 93) {
+          state.coolantTemp = Math.min(93, state.coolantTemp + warmRate * dt);
+        }
+
+        if (state.rpm > 4200) {
+          state.exhaustHeat = Math.min(1, state.exhaustHeat + dt * 0.45);
+        } else {
+          state.exhaustHeat = Math.max(0, state.exhaustHeat - dt * 0.25);
+        }
+      } else {
+        state.rpm += (0 - state.rpm) * Math.min(1, dt * 5);
+        if (state.rpm < 5) state.rpm = 0;
+        const baseVolt = state.ignitionPos === 1 ? 12.2 : 12.5;
+        state.batteryVoltage += (baseVolt - state.batteryVoltage) * Math.min(1, dt * 3);
+        state.exhaustHeat = Math.max(0, state.exhaustHeat - dt * 0.35);
+
+        if (state.coolantTemp > 22 && !state.isPreWarmed) {
+          state.coolantTemp = Math.max(22, state.coolantTemp - 0.5 * dt);
+        }
+      }
+
+      // 3. Dashboard warning LEDs
+      const ledBat = document.getElementById('ledBattery');
+      const ledOil = document.getElementById('ledOil');
+      const ledEpc = document.getElementById('ledEpc');
+
+      if (state.ignitionPos === 1 || (isRunning && state.crankingTimer > 0)) {
+        ledBat.className = 'w-2.5 h-2.5 rounded-full bg-red-600 border border-red-400';
+        ledOil.className = 'w-2.5 h-2.5 rounded-full bg-red-600 border border-red-400';
+        ledEpc.className = 'w-2.5 h-2.5 rounded-full bg-amber-500 border border-amber-300';
+      } else {
+        ledBat.className = 'w-2.5 h-2.5 rounded-full bg-stone-700 border border-stone-600';
+        ledOil.className = 'w-2.5 h-2.5 rounded-full bg-stone-700 border border-stone-600';
+        ledEpc.className = 'w-2.5 h-2.5 rounded-full bg-stone-700 border border-stone-600';
+      }
+
+      // 4. Kinematics & Fan
+      const rpmFactor = state.rpm / 1000;
+      state.crankAngle += rpmFactor * 14 * dt;
+      state.beltOffset += rpmFactor * 42 * dt;
+      state.flowPhase += (isRunning ? (0.6 + rpmFactor * 0.7) : 0.35) * dt;
+
+      if (isRunning && state.coolantTemp >= 92) {
+        state.fanAngle += 13 * dt;
+      } else if (isRunning) {
+        state.fanAngle += 0.8 * dt;
+      }
+
+      if (isRunning && state.rpm > 120) {
+        const sparksPerSec = (state.rpm / 60) * 2;
+        state.sparkTimer += sparksPerSec * dt;
+        if (state.sparkTimer >= 1) {
+          state.sparkStep = (state.sparkStep + 1) % 4;
+          state.sparkTimer %= 1;
+        }
+      }
+
+      // 5. Multimeter Readouts
+      rpmReadout.textContent = `${Math.round(state.rpm)}`;
+      const roundedTemp = Math.round(state.coolantTemp);
+      tempReadout.textContent = `${roundedTemp} °C`;
+      tempReadout.className = `font-mono text-xs sm:text-sm font-bold mt-0.5 ${
+        roundedTemp >= 92 ? 'text-red-400' : (roundedTemp > 60 ? 'text-amber-400' : 'text-stone-200')
+      }`;
+      voltReadout.textContent = `${state.batteryVoltage.toFixed(1)} V`;
+
+      const thermoText = document.getElementById('thermostatStateText');
+      if (roundedTemp >= 88) {
+        thermoText.textContent = 'OTEVŘENÝ (VELKÝ OKRUH + CHLADIČ)';
+        thermoText.className = 'text-emerald-400';
+      } else {
+        thermoText.textContent = 'ZAVŘENÝ (MALÝ OKRUH)';
+        thermoText.className = 'text-amber-500';
+      }
+
+      // 6. Audio Synth & Render Canvases
+      engineAudio.update(isRunning, state.rpm, state.soundEnabled);
+
+      const mainSize = resizeCanvasToContainer(engineCanvas);
+      drawEngineBayScene(engineCtx, mainSize.w, mainSize.h);
+
+      const inspSize = resizeCanvasToContainer(inspectorCanvas);
+      drawInspectorAnimation(inspectorCtx, inspSize.w, inspSize.h);
+
+      requestAnimationFrame(simulationLoop);
+    }
+
+    window.onload = function () {
+      selectPart('engine_block', false);
+      requestAnimationFrame(simulationLoop);
+    };
+  </script>
+</body>
+</html>
